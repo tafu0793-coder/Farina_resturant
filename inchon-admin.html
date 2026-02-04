@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inchon Institute - Administration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root[data-theme="dark"] {
+            --primary: #00d9ff;
+            --secondary: #bd00ff;
+            --accent: #ff006e;
+            --dark: #0a0e27;
+            --darker: #050816;
+            --light: #ffffff;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+            --bg-main: #050816;
+            --bg-card: rgba(10, 14, 39, 0.8);
+            --border-color: rgba(0, 217, 255, 0.3);
+            --text-color: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+
+        :root[data-theme="blue"] {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --accent: #1d4ed8;
+            --dark: #1e3a8a;
+            --darker: #1e40af;
+            --light: #ffffff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-main: #f0f9ff;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(37, 99, 235, 0.3);
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        :root[data-theme="cream"] {
+            --primary: #d4a574;
+            --secondary: #c4915c;
+            --accent: #8b6f47;
+            --dark: #5a4a3a;
+            --darker: #3d2f23;
+            --light: #2d2218;
+            --success: #7fb069;
+            --warning: #f4a261;
+            --danger: #e76f51;
+            --bg-main: #faf6f1;
+            --bg-card: rgba(255, 251, 245, 0.95);
+            --border-color: rgba(212, 165, 116, 0.3);
+            --text-color: #3d2f23;
+            --text-secondary: #8b7355;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Login Screen */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            background: var(--bg-main);
+        }
+
+        .login-box {
+            background: var(--bg-card);
+            padding: 50px;
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 25px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(var(--primary), 0.3);
+        }
+
+        .login-form input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .login-error {
+            color: var(--danger);
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* Galaxy Background Animation */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        [data-theme="dark"] .galaxy-bg {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            opacity: 1;
+        }
+
+        [data-theme="blue"] .galaxy-bg {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
+            opacity: 0.3;
+        }
+
+        [data-theme="cream"] .galaxy-bg {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
+            opacity: 0.2;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 4s infinite ease-in-out;
+        }
+
+        [data-theme="blue"] .star,
+        [data-theme="cream"] .star {
+            opacity: 0.2;
+        }
+
+        [data-theme="dark"] .star {
+            opacity: 1;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        .comet {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.5);
+            animation: shoot 3s linear infinite;
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-300px) translateY(300px);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-btn {
+            padding: 8px 15px;
+            border: 2px solid var(--border-color);
+            background: transparent;
+            color: var(--text-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .theme-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--bg-main);
+        }
+
+        .theme-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--bg-main);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            font-family: 'Orbitron', sans-serif;
+            padding: 15px 30px;
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(var(--primary), 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px var(--border-color);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--bg-main);
+            border-color: transparent;
+            box-shadow: 0 5px 30px var(--border-color);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, select, textarea {
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--border-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--bg-main);
+            box-shadow: 0 5px 20px var(--border-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--border-color);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.85rem;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 15px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--bg-main);
+            border-bottom: 2px solid var(--primary);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        tr:hover {
+            background: var(--border-color);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-completed {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-incomplete {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        /* Report Section */
+        .report-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .month-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid var(--primary);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        /* Notification Toast */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 20px 30px;
+            min-width: 300px;
+            z-index: 3000;
+            animation: slideInRight 0.4s ease-out;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+        }
+
+        .notification.hide {
+            animation: slideOutRight 0.4s ease-out;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-icon {
+            font-size: 2rem;
+        }
+
+        .notification-text {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .notification.success {
+            border-color: var(--success);
+        }
+
+        .notification.success .notification-title {
+            color: var(--success);
+        }
+
+        .notification.error {
+            border-color: var(--danger);
+        }
+
+        .notification.error .notification-title {
+            color: var(--danger);
+        }
+
+        .notification.warning {
+            border-color: var(--warning);
+        }
+
+        .notification.warning .notification-title {
+            color: var(--warning);
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <!-- Notification Toast -->
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <div class="notification-icon" id="notificationIcon">✓</div>
+            <div class="notification-text">
+                <div class="notification-title" id="notificationTitle">Success</div>
+                <div class="notification-message" id="notificationMessage">Operation completed successfully</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">INCHON</div>
+            <p class="login-subtitle">ADMINISTRATION PORTAL</p>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="Username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary login-btn">LOGIN</button>
+                <div class="login-error" id="loginError">Invalid username or password</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="main-content">
+    <!-- Galaxy Background -->
+    <div class="galaxy-bg">
+        <div class="stars" id="stars"></div>
+        <div class="nebula" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,217,255,0.3), transparent); top: 20%; left: 10%;"></div>
+        <div class="nebula" style="width: 300px; height: 300px; background: radial-gradient(circle, rgba(189,0,255,0.3), transparent); bottom: 30%; right: 15%; animation-delay: -5s;"></div>
+        <div class="nebula" style="width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,0,110,0.2), transparent); top: 50%; left: 50%; animation-delay: -10s;"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+            <div class="theme-toggle">
+                <button class="theme-btn active" data-theme="dark" onclick="setTheme('dark')">Dark</button>
+                <button class="theme-btn" data-theme="blue" onclick="setTheme('blue')">Blue</button>
+                <button class="theme-btn" data-theme="cream" onclick="setTheme('cream')">Cream</button>
+            </div>
+            <h1>INCHON INSTITUTE</h1>
+            <p class="subtitle">ADMINISTRATION PORTAL</p>
+        </header>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('admission')">New Admission</button>
+            <button class="tab-btn" onclick="showTab('attendance')">Attendance</button>
+            <button class="tab-btn" onclick="showTab('fees')">Fees</button>
+            <button class="tab-btn" onclick="showTab('rates')">Rates</button>
+            <button class="tab-btn" onclick="showTab('status')">Status</button>
+            <button class="tab-btn" onclick="showTab('reports')">Monthly Reports</button>
+        </div>
+
+        <!-- Admission Section -->
+        <div id="admission" class="content-section active">
+            <div class="form-container">
+                <h2 style="margin-bottom: 30px; font-family: 'Orbitron', sans-serif; color: var(--primary);">NEW STUDENT ADMISSION</h2>
+                <form id="admissionForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Student Name *</label>
+                            <input type="text" id="studentName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Student ID</label>
+                            <input type="text" id="studentId" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone *</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Course *</label>
+                            <select id="course" required>
+                                <option value="">Select Course</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="AI/ML">AI/ML</option>
+                                <option value="Cyber Security">Cyber Security</option>
+                                <option value="Mobile Development">Mobile Development</option>
+                                <option value="Cloud Computing">Cloud Computing</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Admission Date *</label>
+                            <input type="date" id="admissionDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fee Amount ($) *</label>
+                            <input type="number" id="feeAmount" required min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Course Duration (months) *</label>
+                            <input type="number" id="courseDuration" required min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea id="address"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Save Student</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Attendance Section -->
+        <div id="attendance" class="content-section">
+            <div class="table-container">
+                <h2 style="margin-bottom: 20px; font-family: 'Orbitron', sans-serif; color: var(--primary);">ATTENDANCE MANAGEMENT</h2>
+                <input type="text" class="search-box" id="attendanceSearch" placeholder="Search students..." onkeyup="filterTable('attendanceTable', this.value)">
+                <table id="attendanceTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Course</th>
+                            <th>Present Days</th>
+                            <th>Absent Days</th>
+                            <th>Attendance %</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Fees Section -->
+        <div id="fees" class="content-section">
+            <div class="table-container">
+                <h2 style="margin-bottom: 20px; font-family: 'Orbitron', sans-serif; color: var(--primary);">FEE MANAGEMENT</h2>
+                <input type="text" class="search-box" id="feesSearch" placeholder="Search students..." onkeyup="filterTable('feesTable', this.value)">
+                <table id="feesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Course</th>
+                            <th>Total Fee</th>
+                            <th>Paid</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feesBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rates Section -->
+        <div id="rates" class="content-section">
+            <div class="table-container">
+                <h2 style="margin-bottom: 20px; font-family: 'Orbitron', sans-serif; color: var(--primary);">STUDENT RATINGS</h2>
+                <input type="text" class="search-box" id="ratesSearch" placeholder="Search students..." onkeyup="filterTable('ratesTable', this.value)">
+                <table id="ratesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Course</th>
+                            <th>Performance Rating</th>
+                            <th>Attendance Rating</th>
+                            <th>Overall Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratesBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Status Section -->
+        <div id="status" class="content-section">
+            <div class="table-container">
+                <h2 style="margin-bottom: 20px; font-family: 'Orbitron', sans-serif; color: var(--primary);">COURSE STATUS</h2>
+                <input type="text" class="search-box" id="statusSearch" placeholder="Search students..." onkeyup="filterTable('statusTable', this.value)">
+                <table id="statusTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Course</th>
+                            <th>Start Date</th>
+                            <th>Progress %</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statusBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports" class="content-section">
+            <div class="form-container">
+                <h2 style="margin-bottom: 30px; font-family: 'Orbitron', sans-serif; color: var(--primary);">MONTHLY REPORTS</h2>
+                
+                <div class="report-controls">
+                    <div class="month-selector">
+                        <label>Select Month:</label>
+                        <select id="reportMonth">
+                            <option value="">Current Month</option>
+                        </select>
+                        <select id="reportYear">
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                    <button class="btn btn-success" onclick="downloadReport()">Download Report</button>
+                    <button class="btn btn-danger" onclick="deleteMonthData()">Delete Month Data</button>
+                </div>
+
+                <div class="stats-grid" id="reportStats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalStudents">0</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalRevenue">$0</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedCourses">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="activeCourses">0</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                </div>
+
+                <div id="reportData" class="table-container" style="margin-top: 30px; display: none;">
+                    <h3 style="color: var(--primary); margin-bottom: 20px;">Report Details</h3>
+                    <div id="reportContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); margin-bottom: 20px; font-family: 'Orbitron', sans-serif;">EDIT RECORD</h2>
+            <div id="editFormContainer"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-success" onclick="saveEdit()">Save Changes</button>
+                <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color: var(--danger); margin-bottom: 20px; font-family: 'Orbitron', sans-serif;">CONFIRM DELETE</h2>
+            <p style="margin-bottom: 30px; font-size: 1.1rem;">Are you sure you want to delete this record?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-danger" onclick="confirmDelete()">Yes, Delete</button>
+                <button class="btn btn-primary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    </div><!-- End Main Content -->
+
+    <script>
+        // Authentication
+        const CREDENTIALS = {
+            username: 'Inchon',
+            password: 'Inchon123'
+        };
+
+        // Check if user is logged in
+        function checkAuth() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                showMainContent();
+            } else {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('mainContent').classList.remove('active');
+        }
+
+        function showMainContent() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('mainContent').classList.add('active');
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                errorDiv.style.display = 'none';
+                showNotification('Login Successful', 'Welcome to Inchon Institute Administration', 'success');
+                setTimeout(() => {
+                    showMainContent();
+                }, 1000);
+            } else {
+                errorDiv.style.display = 'block';
+                showNotification('Login Failed', 'Invalid username or password', 'error');
+            }
+        });
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('isLoggedIn');
+            showNotification('Logged Out', 'You have been logged out successfully', 'success');
+            setTimeout(() => {
+                showLogin();
+                document.getElementById('loginForm').reset();
+            }, 1500);
+        }
+
+        // Theme management
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            // Update active button
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-theme') === theme) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        setTheme(savedTheme);
+
+        // Notification System
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = document.getElementById('notificationIcon');
+
+            // Set content
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+
+            // Set icon based on type
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            notificationIcon.textContent = icons[type] || icons.success;
+
+            // Remove all type classes
+            notification.classList.remove('success', 'error', 'warning', 'info', 'hide');
+            // Add current type
+            notification.classList.add(type, 'show');
+
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    notification.classList.remove('show', 'hide');
+                }, 400);
+            }, 3000);
+        }
+        // Initialize galaxy background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 4 + 's';
+                starsContainer.appendChild(star);
+            }
+
+            // Add comets
+            for (let i = 0; i < 5; i++) {
+                const comet = document.createElement('div');
+                comet.className = 'comet';
+                comet.style.left = Math.random() * 100 + '%';
+                comet.style.top = Math.random() * 50 + '%';
+                comet.style.animationDelay = Math.random() * 3 + 's';
+                comet.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(comet);
+            }
+        }
+        createStars();
+
+        // Data storage
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        let currentEditId = null;
+        let currentDeleteId = null;
+        let studentIdCounter = parseInt(localStorage.getItem('studentIdCounter')) || 1000;
+
+        // Generate student ID
+        function generateStudentId() {
+            const id = 'INC' + studentIdCounter;
+            studentIdCounter++;
+            localStorage.setItem('studentIdCounter', studentIdCounter);
+            return id;
+        }
+
+        // Set initial student ID
+        document.getElementById('studentId').value = generateStudentId();
+
+        // Tab navigation
+        function showTab(tabName) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Refresh tables when switching tabs
+            if (tabName !== 'admission' && tabName !== 'reports') {
+                renderTables();
+            }
+        }
+
+        // Form submission
+        document.getElementById('admissionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const student = {
+                id: document.getElementById('studentId').value,
+                name: document.getElementById('studentName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                course: document.getElementById('course').value,
+                admissionDate: document.getElementById('admissionDate').value,
+                feeAmount: parseFloat(document.getElementById('feeAmount').value),
+                courseDuration: parseInt(document.getElementById('courseDuration').value),
+                address: document.getElementById('address').value,
+                presentDays: 0,
+                absentDays: 0,
+                feePaid: 0,
+                performanceRating: 0,
+                attendanceRating: 0,
+                progress: 0,
+                courseStatus: 'incomplete',
+                createdAt: new Date().toISOString()
+            };
+
+            students.push(student);
+            localStorage.setItem('students', JSON.stringify(students));
+            
+            showNotification('Student Added', `${student.name} has been successfully admitted with ID ${student.id}`, 'success');
+            this.reset();
+            document.getElementById('studentId').value = generateStudentId();
+            renderTables();
+        });
+
+        // Render all tables
+        function renderTables() {
+            renderAttendanceTable();
+            renderFeesTable();
+            renderRatesTable();
+            renderStatusTable();
+        }
+
+        // Render Attendance Table
+        function renderAttendanceTable() {
+            const tbody = document.getElementById('attendanceBody');
+            tbody.innerHTML = '';
+
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-state-icon">📊</div><div>No students found</div></td></tr>';
+                return;
+            }
+
+            students.forEach(student => {
+                const totalDays = student.presentDays + student.absentDays;
+                const attendancePercent = totalDays > 0 ? ((student.presentDays / totalDays) * 100).toFixed(1) : 0;
+                
+                const row = `
+                    <tr>
+                        <td>${student.id}</td>
+                        <td>${student.name}</td>
+                        <td>${student.course}</td>
+                        <td>${student.presentDays}</td>
+                        <td>${student.absentDays}</td>
+                        <td>${attendancePercent}%</td>
+                        <td class="actions">
+                            <button class="btn btn-warning btn-small" onclick="editAttendance('${student.id}')">Edit</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Render Fees Table
+        function renderFeesTable() {
+            const tbody = document.getElementById('feesBody');
+            tbody.innerHTML = '';
+
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><div class="empty-state-icon">💰</div><div>No students found</div></td></tr>';
+                return;
+            }
+
+            students.forEach(student => {
+                const balance = student.feeAmount - student.feePaid;
+                const status = balance === 0 ? 'Paid' : balance < student.feeAmount ? 'Partial' : 'Unpaid';
+                
+                const row = `
+                    <tr>
+                        <td>${student.id}</td>
+                        <td>${student.name}</td>
+                        <td>${student.course}</td>
+                        <td>$${student.feeAmount.toFixed(2)}</td>
+                        <td>$${student.feePaid.toFixed(2)}</td>
+                        <td>$${balance.toFixed(2)}</td>
+                        <td><span class="status-badge ${status === 'Paid' ? 'status-completed' : 'status-incomplete'}">${status}</span></td>
+                        <td class="actions">
+                            <button class="btn btn-warning btn-small" onclick="editFees('${student.id}')">Edit</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Render Rates Table
+        function renderRatesTable() {
+            const tbody = document.getElementById('ratesBody');
+            tbody.innerHTML = '';
+
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-state-icon">⭐</div><div>No students found</div></td></tr>';
+                return;
+            }
+
+            students.forEach(student => {
+                const overallRating = ((student.performanceRating + student.attendanceRating) / 2).toFixed(1);
+                
+                const row = `
+                    <tr>
+                        <td>${student.id}</td>
+                        <td>${student.name}</td>
+                        <td>${student.course}</td>
+                        <td>${student.performanceRating}/10</td>
+                        <td>${student.attendanceRating}/10</td>
+                        <td>${overallRating}/10</td>
+                        <td class="actions">
+                            <button class="btn btn-warning btn-small" onclick="editRates('${student.id}')">Edit</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Render Status Table
+        function renderStatusTable() {
+            const tbody = document.getElementById('statusBody');
+            tbody.innerHTML = '';
+
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-state-icon">📈</div><div>No students found</div></td></tr>';
+                return;
+            }
+
+            students.forEach(student => {
+                const row = `
+                    <tr>
+                        <td>${student.id}</td>
+                        <td>${student.name}</td>
+                        <td>${student.course}</td>
+                        <td>${new Date(student.admissionDate).toLocaleDateString()}</td>
+                        <td>${student.progress}%</td>
+                        <td><span class="status-badge ${student.courseStatus === 'completed' ? 'status-completed' : 'status-incomplete'}">${student.courseStatus}</span></td>
+                        <td class="actions">
+                            <button class="btn btn-warning btn-small" onclick="editStatus('${student.id}')">Edit</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Edit functions
+        function editAttendance(id) {
+            const student = students.find(s => s.id === id);
+            currentEditId = id;
+            
+            const formHtml = `
+                <div class="form-group">
+                    <label>Present Days</label>
+                    <input type="number" id="editPresentDays" value="${student.presentDays}" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Absent Days</label>
+                    <input type="number" id="editAbsentDays" value="${student.absentDays}" min="0">
+                </div>
+            `;
+            
+            document.getElementById('editFormContainer').innerHTML = formHtml;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function editFees(id) {
+            const student = students.find(s => s.id === id);
+            currentEditId = id;
+            
+            const formHtml = `
+                <div class="form-group">
+                    <label>Total Fee Amount ($)</label>
+                    <input type="number" id="editFeeAmount" value="${student.feeAmount}" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Amount Paid ($)</label>
+                    <input type="number" id="editFeePaid" value="${student.feePaid}" min="0" step="0.01">
+                </div>
+            `;
+            
+            document.getElementById('editFormContainer').innerHTML = formHtml;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function editRates(id) {
+            const student = students.find(s => s.id === id);
+            currentEditId = id;
+            
+            const formHtml = `
+                <div class="form-group">
+                    <label>Performance Rating (0-10)</label>
+                    <input type="number" id="editPerformanceRating" value="${student.performanceRating}" min="0" max="10" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Attendance Rating (0-10)</label>
+                    <input type="number" id="editAttendanceRating" value="${student.attendanceRating}" min="0" max="10" step="0.1">
+                </div>
+            `;
+            
+            document.getElementById('editFormContainer').innerHTML = formHtml;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function editStatus(id) {
+            const student = students.find(s => s.id === id);
+            currentEditId = id;
+            
+            const formHtml = `
+                <div class="form-group">
+                    <label>Progress (%)</label>
+                    <input type="number" id="editProgress" value="${student.progress}" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label>Course Status</label>
+                    <select id="editCourseStatus">
+                        <option value="incomplete" ${student.courseStatus === 'incomplete' ? 'selected' : ''}>Incomplete</option>
+                        <option value="completed" ${student.courseStatus === 'completed' ? 'selected' : ''}>Completed</option>
+                    </select>
+                </div>
+            `;
+            
+            document.getElementById('editFormContainer').innerHTML = formHtml;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function saveEdit() {
+            const student = students.find(s => s.id === currentEditId);
+            const studentName = student.name;
+            
+            // Update based on which fields exist
+            if (document.getElementById('editPresentDays')) {
+                student.presentDays = parseInt(document.getElementById('editPresentDays').value);
+                student.absentDays = parseInt(document.getElementById('editAbsentDays').value);
+                showNotification('Attendance Updated', `Attendance record for ${studentName} has been updated successfully`, 'success');
+            }
+            if (document.getElementById('editFeeAmount')) {
+                student.feeAmount = parseFloat(document.getElementById('editFeeAmount').value);
+                student.feePaid = parseFloat(document.getElementById('editFeePaid').value);
+                showNotification('Fees Updated', `Fee information for ${studentName} has been updated successfully`, 'success');
+            }
+            if (document.getElementById('editPerformanceRating')) {
+                student.performanceRating = parseFloat(document.getElementById('editPerformanceRating').value);
+                student.attendanceRating = parseFloat(document.getElementById('editAttendanceRating').value);
+                showNotification('Ratings Updated', `Ratings for ${studentName} have been updated successfully`, 'success');
+            }
+            if (document.getElementById('editProgress')) {
+                student.progress = parseInt(document.getElementById('editProgress').value);
+                student.courseStatus = document.getElementById('editCourseStatus').value;
+                showNotification('Status Updated', `Course status for ${studentName} has been updated successfully`, 'success');
+            }
+            
+            localStorage.setItem('students', JSON.stringify(students));
+            closeModal();
+            renderTables();
+        }
+
+        function deleteStudent(id) {
+            currentDeleteId = id;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function confirmDelete() {
+            const student = students.find(s => s.id === currentDeleteId);
+            const studentName = student.name;
+            const studentId = student.id;
+            
+            students = students.filter(s => s.id !== currentDeleteId);
+            localStorage.setItem('students', JSON.stringify(students));
+            closeModal();
+            renderTables();
+            showNotification('Student Deleted', `${studentName} (ID: ${studentId}) has been permanently deleted from the system`, 'warning');
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.getElementById('deleteModal').classList.remove('active');
+        }
+
+        // Search functionality
+        function filterTable(tableId, searchValue) {
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchValue.toLowerCase()) ? '' : 'none';
+            }
+        }
+
+        // Report functions
+        function initializeReportDates() {
+            const monthSelect = document.getElementById('reportMonth');
+            const yearSelect = document.getElementById('reportYear');
+            
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            });
+            
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear - 5; i <= currentYear + 1; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (i === currentYear) option.selected = true;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        function generateReport() {
+            const month = document.getElementById('reportMonth').value;
+            const year = document.getElementById('reportYear').value;
+            
+            let filteredStudents = students;
+            
+            if (month !== '' && year) {
+                filteredStudents = students.filter(s => {
+                    const admissionDate = new Date(s.admissionDate);
+                    return admissionDate.getMonth() == month && admissionDate.getFullYear() == year;
+                });
+            }
+            
+            // Calculate statistics
+            const totalStudents = filteredStudents.length;
+            const totalRevenue = filteredStudents.reduce((sum, s) => sum + s.feePaid, 0);
+            const completed = filteredStudents.filter(s => s.courseStatus === 'completed').length;
+            const active = filteredStudents.filter(s => s.courseStatus === 'incomplete').length;
+            
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toFixed(2);
+            document.getElementById('completedCourses').textContent = completed;
+            document.getElementById('activeCourses').textContent = active;
+            
+            // Generate detailed report table
+            if (filteredStudents.length > 0) {
+                let reportHtml = '<table><thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Fee Paid</th><th>Status</th></tr></thead><tbody>';
+                
+                filteredStudents.forEach(student => {
+                    reportHtml += `
+                        <tr>
+                            <td>${student.id}</td>
+                            <td>${student.name}</td>
+                            <td>${student.course}</td>
+                            <td>$${student.feePaid.toFixed(2)}</td>
+                            <td><span class="status-badge ${student.courseStatus === 'completed' ? 'status-completed' : 'status-incomplete'}">${student.courseStatus}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                reportHtml += '</tbody></table>';
+                document.getElementById('reportContent').innerHTML = reportHtml;
+                document.getElementById('reportData').style.display = 'block';
+                
+                const monthName = month !== '' ? document.getElementById('reportMonth').options[parseInt(month) + 1].text : 'All Months';
+                showNotification('Report Generated', `Report for ${monthName} ${year} has been generated with ${totalStudents} students`, 'success');
+            } else {
+                document.getElementById('reportData').style.display = 'none';
+                showNotification('No Data', 'No students found for the selected period', 'info');
+            }
+        }
+
+        function downloadReport() {
+            const month = document.getElementById('reportMonth').value;
+            const year = document.getElementById('reportYear').value;
+            const monthName = month !== '' ? document.getElementById('reportMonth').options[parseInt(month) + 1].text : 'All';
+            
+            let csvContent = "Student ID,Name,Course,Admission Date,Fee Amount,Fee Paid,Balance,Progress,Status,Performance Rating,Attendance Rating\n";
+            
+            students.forEach(student => {
+                const balance = student.feeAmount - student.feePaid;
+                csvContent += `${student.id},${student.name},${student.course},${student.admissionDate},${student.feeAmount},${student.feePaid},${balance},${student.progress}%,${student.courseStatus},${student.performanceRating},${student.attendanceRating}\n`;
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const filename = `Inchon_Institute_Report_${monthName}_${year}.csv`;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            showNotification('Report Downloaded', `${filename} has been downloaded successfully`, 'success');
+        }
+
+        function deleteMonthData() {
+            const month = document.getElementById('reportMonth').value;
+            const year = document.getElementById('reportYear').value;
+            
+            if (month === '' || !year) {
+                showNotification('Selection Required', 'Please select a month and year first', 'warning');
+                return;
+            }
+            
+            const monthName = document.getElementById('reportMonth').options[parseInt(month) + 1].text;
+            
+            if (!confirm(`Are you sure you want to delete all data for ${monthName} ${year}? This action cannot be undone!`)) {
+                return;
+            }
+            
+            const beforeCount = students.length;
+            students = students.filter(s => {
+                const admissionDate = new Date(s.admissionDate);
+                return !(admissionDate.getMonth() == month && admissionDate.getFullYear() == year);
+            });
+            const deletedCount = beforeCount - students.length;
+            
+            localStorage.setItem('students', JSON.stringify(students));
+            showNotification('Data Deleted', `${deletedCount} student record(s) from ${monthName} ${year} have been permanently deleted`, 'warning');
+            generateReport();
+            renderTables();
+        }
+
+        // Initialize
+        initializeReportDates();
+        renderTables();
+        
+        // Set default admission date to today
+        document.getElementById('admissionDate').valueAsDate = new Date();
+        
+        // Check authentication on page load
+        checkAuth();
+    </script>
+</body>
+</html>
