@@ -1,1706 +1,957 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inchon Institute - Administration</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root[data-theme="dark"] {
-            --primary: #00d9ff;
-            --secondary: #bd00ff;
-            --accent: #ff006e;
-            --dark: #0a0e27;
-            --darker: #050816;
-            --light: #ffffff;
-            --success: #00ff88;
-            --warning: #ffaa00;
-            --danger: #ff3366;
-            --bg-main: #050816;
-            --bg-card: rgba(10, 14, 39, 0.8);
-            --border-color: rgba(0, 217, 255, 0.3);
-            --text-color: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-        }
-
-        :root[data-theme="blue"] {
-            --primary: #2563eb;
-            --secondary: #3b82f6;
-            --accent: #1d4ed8;
-            --dark: #1e3a8a;
-            --darker: #1e40af;
-            --light: #ffffff;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --bg-main: #f0f9ff;
-            --bg-card: rgba(255, 255, 255, 0.95);
-            --border-color: rgba(37, 99, 235, 0.3);
-            --text-color: #1e293b;
-            --text-secondary: #64748b;
-        }
-
-        :root[data-theme="cream"] {
-            --primary: #d4a574;
-            --secondary: #c4915c;
-            --accent: #8b6f47;
-            --dark: #5a4a3a;
-            --darker: #3d2f23;
-            --light: #2d2218;
-            --success: #7fb069;
-            --warning: #f4a261;
-            --danger: #e76f51;
-            --bg-main: #faf6f1;
-            --bg-card: rgba(255, 251, 245, 0.95);
-            --border-color: rgba(212, 165, 116, 0.3);
-            --text-color: #3d2f23;
-            --text-secondary: #8b7355;
-        }
-
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--bg-main);
-            color: var(--text-color);
-            overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Login Screen */
-        .login-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            background: var(--bg-main);
-        }
-
-        .login-box {
-            background: var(--bg-card);
-            padding: 50px;
-            border-radius: 20px;
-            border: 2px solid var(--border-color);
-            backdrop-filter: blur(10px);
-            max-width: 450px;
-            width: 90%;
-            text-align: center;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            letter-spacing: 3px;
-        }
-
-        .login-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-        }
-
-        .login-form .form-group {
-            margin-bottom: 25px;
-        }
-
-        .login-form input {
-            width: 100%;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            color: var(--text-color);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-
-        .login-form input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(var(--primary), 0.3);
-        }
-
-        .login-form input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 15px;
-            margin-top: 10px;
-        }
-
-        .login-error {
-            color: var(--danger);
-            margin-top: 15px;
-            font-weight: 600;
-            display: none;
-        }
-
-        /* Galaxy Background Animation */
-        .galaxy-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            transition: opacity 0.3s ease;
-        }
-
-        [data-theme="dark"] .galaxy-bg {
-            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-            opacity: 1;
-        }
-
-        [data-theme="blue"] .galaxy-bg {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
-            opacity: 0.3;
-        }
-
-        [data-theme="cream"] .galaxy-bg {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
-            opacity: 0.2;
-        }
-
-        .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 4s infinite ease-in-out;
-        }
-
-        [data-theme="blue"] .star,
-        [data-theme="cream"] .star {
-            opacity: 0.2;
-        }
-
-        [data-theme="dark"] .star {
-            opacity: 1;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .nebula {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.3;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -50px) scale(1.1); }
-            66% { transform: translate(-30px, 30px) scale(0.9); }
-        }
-
-        .comet {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.5);
-            animation: shoot 3s linear infinite;
-        }
-
-        @keyframes shoot {
-            0% {
-                transform: translateX(0) translateY(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(-300px) translateY(300px);
-                opacity: 0;
-            }
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-        }
-
-        /* Header */
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background: var(--bg-card);
-            border-radius: 20px;
-            border: 2px solid var(--border-color);
-            margin-bottom: 40px;
-            backdrop-filter: blur(10px);
-            animation: slideDown 0.8s ease-out;
-            position: relative;
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .theme-btn {
-            padding: 8px 15px;
-            border: 2px solid var(--border-color);
-            background: transparent;
-            color: var(--text-color);
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
-
-        .theme-btn:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: var(--bg-main);
-        }
-
-        .theme-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: var(--bg-main);
-        }
-
-        .logout-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 20px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            text-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
-            letter-spacing: 3px;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            letter-spacing: 2px;
-        }
-
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .tab-btn {
-            font-family: 'Orbitron', sans-serif;
-            padding: 15px 30px;
-            background: var(--bg-card);
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tab-btn:hover {
-            background: rgba(var(--primary), 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px var(--border-color);
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--bg-main);
-            border-color: transparent;
-            box-shadow: 0 5px 30px var(--border-color);
-        }
-
-        /* Content Sections */
-        .content-section {
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Form Styles */
-        .form-container {
-            background: var(--bg-card);
-            padding: 40px;
-            border-radius: 15px;
-            border: 2px solid var(--border-color);
-            backdrop-filter: blur(10px);
-            margin-bottom: 30px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--primary);
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        input, select, textarea {
-            padding: 12px 15px;
-            background: rgba(0, 0, 0, 0.1);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-color);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--border-color);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--bg-main);
-            box-shadow: 0 5px 20px var(--border-color);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--border-color);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-small {
-            padding: 8px 15px;
-            font-size: 0.85rem;
-        }
-
-        /* Table Styles */
-        .table-container {
-            background: var(--bg-card);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid var(--border-color);
-            backdrop-filter: blur(10px);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 15px;
-            text-align: left;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            color: var(--bg-main);
-            border-bottom: 2px solid var(--primary);
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-color);
-        }
-
-        tr:hover {
-            background: var(--border-color);
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .status-completed {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--success);
-            border: 1px solid var(--success);
-        }
-
-        .status-incomplete {
-            background: rgba(255, 170, 0, 0.2);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-        }
-
-        /* Report Section */
-        .report-controls {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .month-selector {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid var(--border-color);
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            padding: 40px;
-            border-radius: 20px;
-            border: 2px solid var(--primary);
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            animation: modalSlide 0.3s ease-out;
-        }
-
-        @keyframes modalSlide {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-
-        /* Notification Toast */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: 15px;
-            padding: 20px 30px;
-            min-width: 300px;
-            z-index: 3000;
-            animation: slideInRight 0.4s ease-out;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            display: none;
-        }
-
-        .notification.show {
-            display: block;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(400px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideOutRight {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(400px);
-            }
-        }
-
-        .notification.hide {
-            animation: slideOutRight 0.4s ease-out;
-        }
-
-        .notification-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .notification-icon {
-            font-size: 2rem;
-        }
-
-        .notification-text {
-            flex: 1;
-        }
-
-        .notification-title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
-
-        .notification-message {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .notification.success {
-            border-color: var(--success);
-        }
-
-        .notification.success .notification-title {
-            color: var(--success);
-        }
-
-        .notification.error {
-            border-color: var(--danger);
-        }
-
-        .notification.error .notification-title {
-            color: var(--danger);
-        }
-
-        .notification.warning {
-            border-color: var(--warning);
-        }
-
-        .notification.warning .notification-title {
-            color: var(--warning);
-        }
-
-        .search-box {
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 20px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        .main-content {
-            display: none;
-        }
-
-        .main-content.active {
-            display: block;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مطعم فارينا</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root{--gold:#c9a84c;--deep:#1a0a00;--cream:#fdf6e3;--warm:#8b2500;--accent:#e84d0e;--green:#2d6a4f;--purple:#6b3fa0}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Cairo',sans-serif;background:var(--deep);color:var(--cream);overflow-x:hidden;direction:rtl}
+  .page{display:none;min-height:100vh}
+  .page.active{display:block;animation:page-fade 0.4s ease}
+  @keyframes page-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(26,10,0,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.3);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:70px}
+  .nav-brand{display:flex;align-items:center;gap:0.7rem;cursor:pointer;transition:all 0.3s}
+  .nav-logo-img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);animation:logo-glow 3s ease-in-out infinite;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#3a1500,#7a3000)}
+  /* ↑↑↑ ضع صورة الشعار بالاستبدال: <img src="logo.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover"> */
+  @keyframes logo-glow{0%,100%{box-shadow:0 0 16px rgba(201,168,76,0.5)}50%{box-shadow:0 0 30px rgba(232,77,14,0.7),0 0 50px rgba(201,168,76,0.3)}}
+  .nav-title{font-family:'Amiri',serif;font-size:1.6rem;color:var(--gold)}
+  .nav-links{display:flex;gap:0.4rem}
+  .nav-links a{color:var(--cream);text-decoration:none;padding:0.5rem 1.1rem;border-radius:25px;font-size:0.95rem;font-weight:600;transition:all 0.3s;cursor:pointer;position:relative;overflow:hidden}
+  .nav-links a::before{content:'';position:absolute;inset:0;border-radius:25px;background:linear-gradient(135deg,var(--gold),var(--accent));opacity:0;transition:opacity 0.3s}
+  .nav-links a:hover::before,.nav-links a.active::before{opacity:1}
+  .nav-links a span{position:relative;z-index:1}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+  .hamburger span{width:25px;height:2px;background:var(--gold);transition:all 0.3s}
+
+  /* HOME */
+  #home{background:linear-gradient(135deg,#1a0a00 0%,#2d1200 50%,#1a0600 100%)}
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 2rem 4rem;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(201,168,76,0.1) 0%,transparent 70%);animation:pulse-bg 4s ease-in-out infinite}
+  @keyframes pulse-bg{0%,100%{opacity:0.5}50%{opacity:1}}
+  .floating-icon{position:absolute;font-size:2rem;opacity:0.07;animation:float-random 8s ease-in-out infinite;pointer-events:none}
+  @keyframes float-random{0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-30px) rotate(10deg)}66%{transform:translateY(20px) rotate(-10deg)}}
+
+  /* Hero logo placeholder */
+  .hero-logo-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 2rem;position:relative;display:flex;align-items:center;justify-content:center;animation:hero-float 4s ease-in-out infinite}
+  .hero-logo-ring::before{content:'';position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(var(--gold),var(--accent),var(--purple),var(--green),var(--gold));animation:spin 4s linear infinite;z-index:-1}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes hero-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .hero-logo-inner{width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,#3a1500,#6a2800);display:flex;align-items:center;justify-content:center;font-size:4.5rem;box-shadow:0 0 40px rgba(201,168,76,0.4);overflow:hidden}
+  /* To use your PNG: replace the emoji span with <img src="YOUR.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%"> */
+
+  .restaurant-name{font-family:'Times New Roman',Times,serif;font-size:clamp(3.5rem,12vw,8rem);font-weight:900;line-height:1;background:linear-gradient(135deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#ff6bff,#ffd93d);background-size:400% 400%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:rainbow-text 3s ease infinite,name-float 4s ease-in-out infinite}
+  @keyframes rainbow-text{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  @keyframes name-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .tagline{font-family:'Amiri',serif;font-style:italic;font-size:clamp(1.1rem,3vw,1.6rem);color:var(--gold);margin:1rem 0 2rem;opacity:0;animation:fade-up 1s 0.5s forwards}
+  @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .hero-desc{max-width:720px;font-size:1.05rem;line-height:2.1;color:rgba(253,246,227,0.85);margin-bottom:3rem;opacity:0;animation:fade-up 1s 0.8s forwards}
+  .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fade-up 1s 1.1s forwards}
+
+  .btn-primary{padding:1rem 2.5rem;border:none;border-radius:50px;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--accent));color:white;font-size:1rem;font-weight:700;font-family:'Cairo',sans-serif;transition:all 0.3s;box-shadow:0 4px 20px rgba(201,168,76,0.4)}
+  .btn-primary:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 8px 30px rgba(201,168,76,0.6)}
+  .btn-outline{padding:1rem 2.5rem;border:2px solid var(--gold);border-radius:50px;cursor:pointer;background:transparent;color:var(--gold);font-size:1rem;font-weight:700;font-family:'Cairo',sans-serif;transition:all 0.3s}
+  .btn-outline:hover{background:var(--gold);color:var(--deep);transform:translateY(-3px)}
+
+  /* Features */
+  .features{padding:5rem 2rem;background:linear-gradient(180deg,transparent,rgba(201,168,76,0.05));text-align:center}
+  .section-title{font-family:'Amiri',serif;font-size:2.5rem;color:var(--gold);margin-bottom:3rem;position:relative;display:inline-block}
+  .section-title::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:80px;height:3px;background:linear-gradient(90deg,var(--gold),var(--accent));border-radius:2px}
+  .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;max-width:1000px;margin:0 auto}
+  .feature-card{background:rgba(255,255,255,0.03);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:2rem;transition:all 0.4s}
+  .feature-card:hover{transform:translateY(-10px);border-color:var(--gold);background:rgba(201,168,76,0.08)}
+  .feature-icon{font-size:2.5rem;margin-bottom:1rem}
+  .feature-card h3{font-family:'Amiri',serif;color:var(--gold);margin-bottom:0.5rem;font-size:1.2rem}
+  .feature-card p{color:rgba(253,246,227,0.7);font-size:0.9rem;line-height:1.8}
+
+  /* Home menu preview */
+  .home-menu-preview{padding:4rem 2rem;text-align:center;background:linear-gradient(180deg,rgba(201,168,76,0.05),transparent)}
+  .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.5rem;max-width:1200px;margin:2rem auto 0}
+  .preview-card{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:20px;overflow:hidden;cursor:pointer;transition:all 0.4s}
+  .preview-card:hover{transform:translateY(-8px) scale(1.03);border-color:var(--gold);box-shadow:0 20px 50px rgba(201,168,76,0.2)}
+  .preview-img{height:140px;display:flex;align-items:center;justify-content:center;animation:dish-bg-pulse 3s ease-in-out infinite}
+  @keyframes dish-bg-pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15)}}
+  .preview-info{padding:1rem;display:flex;justify-content:space-between;align-items:center}
+  .preview-name{font-family:'Amiri',serif;color:var(--gold);font-size:1rem}
+  .preview-price{color:var(--accent);font-weight:700;font-size:0.95rem}
+
+  /* MENU */
+  #menu{background:linear-gradient(135deg,#0d0500,#1a0a00);padding-top:70px}
+  .menu-hero{text-align:center;padding:4rem 2rem 2rem;background:linear-gradient(180deg,rgba(201,168,76,0.08),transparent)}
+  .menu-title{font-family:'Times New Roman',Times,serif;font-size:clamp(2.5rem,6vw,4rem);background:linear-gradient(135deg,#ffd93d,#ff6b6b,#6bcb77,#4d96ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .menu-subtitle{font-family:'Amiri',serif;font-style:italic;color:var(--gold);margin-top:0.5rem;font-size:1.2rem}
+  .menu-filter{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;padding:2rem}
+  .filter-btn{padding:0.6rem 1.6rem;border-radius:25px;border:1px solid rgba(201,168,76,0.4);background:transparent;color:var(--cream);cursor:pointer;transition:all 0.3s;font-family:'Cairo',sans-serif;font-weight:600;font-size:0.95rem}
+  .filter-btn.active,.filter-btn:hover{background:linear-gradient(135deg,var(--gold),var(--accent));border-color:transparent;transform:scale(1.05)}
+  .dishes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;padding:2rem;max-width:1400px;margin:0 auto}
+  .dish-card{background:rgba(255,255,255,0.04);border-radius:24px;overflow:hidden;border:1px solid rgba(201,168,76,0.15);transition:all 0.4s;animation:card-appear 0.5s ease both}
+  @keyframes card-appear{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .dish-card:hover{transform:translateY(-8px) scale(1.02);border-color:var(--gold);box-shadow:0 20px 60px rgba(201,168,76,0.2)}
+  .dish-img-wrap{height:210px;overflow:hidden;position:relative}
+  .dish-color-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5.5rem;animation:dish-bg-pulse 3s ease-in-out infinite;transition:transform 0.6s}
+  .dish-card:hover .dish-color-bg{transform:scale(1.1)}
+  .dish-badge{position:absolute;top:12px;left:12px;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.75rem;font-weight:700;z-index:2;font-family:'Cairo',sans-serif}
+  .dish-badge.new{background:linear-gradient(135deg,#ff6b6b,#ff8e3c);color:white}
+  .dish-badge.popular{background:linear-gradient(135deg,#f9c74f,#f3722c);color:white}
+  .dish-badge.sweet{background:linear-gradient(135deg,#ff6bff,#9d4edd);color:white}
+  .dish-info{padding:1.5rem}
+  .dish-name{font-family:'Amiri',serif;font-size:1.25rem;color:var(--gold);margin-bottom:0.4rem}
+  .dish-desc{font-size:0.88rem;color:rgba(253,246,227,0.65);line-height:1.7;margin-bottom:1rem}
+  .dish-footer{display:flex;align-items:center;justify-content:space-between}
+  .dish-price{font-size:1.3rem;font-weight:700;color:var(--accent);font-family:'Cairo',sans-serif}
+  .order-btn{padding:0.55rem 1.3rem;border-radius:25px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--accent));color:white;font-weight:700;font-size:0.88rem;font-family:'Cairo',sans-serif;transition:all 0.3s;position:relative;overflow:hidden}
+  .order-btn::after{content:'';position:absolute;inset:0;border-radius:25px;background:linear-gradient(135deg,var(--gold),var(--accent),var(--purple),var(--gold));background-size:300%;animation:btn-glow 2s linear infinite;opacity:0;transition:opacity 0.3s}
+  .order-btn:hover::after{opacity:1}
+  .order-btn:hover{transform:scale(1.1);box-shadow:0 5px 20px rgba(201,168,76,0.5)}
+  @keyframes btn-glow{to{background-position:300%}}
+
+  /* ORDER PANEL */
+  #order-panel{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.82);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:1rem}
+  #order-panel.open{display:flex}
+  .order-modal{background:linear-gradient(135deg,#1a0800,#2d1200);border:1px solid rgba(201,168,76,0.4);border-radius:30px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;padding:2.5rem;position:relative;animation:modal-in 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+  @keyframes modal-in{from{opacity:0;transform:scale(0.8) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .modal-close{position:absolute;top:1rem;left:1.5rem;font-size:1.5rem;color:var(--gold);cursor:pointer;background:none;border:none;transition:all 0.3s}
+  .modal-close:hover{transform:rotate(90deg)}
+  .modal-title{font-family:'Amiri',serif;font-size:1.9rem;color:var(--gold);margin-bottom:1.5rem}
+  .order-dish-preview{display:flex;align-items:center;gap:1rem;background:rgba(201,168,76,0.08);border-radius:16px;padding:1rem;margin-bottom:1.5rem;border:1px solid rgba(201,168,76,0.2)}
+  .order-dish-emoji{font-size:3rem}
+  .order-dish-name{font-family:'Amiri',serif;color:var(--gold);font-size:1.15rem}
+  .order-dish-price{color:var(--accent);font-weight:700;font-size:1.2rem;font-family:'Cairo',sans-serif}
+  .form-section{margin-bottom:1.5rem}
+  .form-label{color:var(--gold);font-size:0.9rem;margin-bottom:0.8rem;display:block;font-family:'Cairo',sans-serif;font-weight:700}
+  .radio-group{display:flex;gap:1rem;flex-wrap:wrap}
+  .radio-opt{display:flex;align-items:center;gap:0.6rem;cursor:pointer;padding:0.75rem 1.2rem;border-radius:12px;border:1px solid rgba(201,168,76,0.3);transition:all 0.3s;flex:1;font-family:'Cairo',sans-serif}
+  .radio-opt.selected{background:rgba(201,168,76,0.15);border-color:var(--gold)}
+  .radio-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--gold);transition:all 0.3s;flex-shrink:0}
+  .radio-opt.selected .radio-dot{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+  .extras-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
+  .extra-item{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1rem;border-radius:12px;border:1px solid rgba(201,168,76,0.2);cursor:pointer;transition:all 0.3s;font-family:'Cairo',sans-serif}
+  .extra-item.selected{background:rgba(201,168,76,0.1);border-color:var(--gold)}
+  .extra-left{display:flex;align-items:center;gap:0.5rem}
+  .extra-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--gold);transition:all 0.3s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  .extra-item.selected .extra-check{background:var(--gold)}
+  .extra-check-icon{color:var(--deep);font-size:0.7rem;display:none}
+  .extra-item.selected .extra-check-icon{display:block}
+  .extra-price{color:var(--accent);font-size:0.85rem;font-weight:700}
+  .qty-control{display:flex;align-items:center;gap:1rem}
+  .qty-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;font-size:1.3rem;transition:all 0.3s;display:flex;align-items:center;justify-content:center}
+  .qty-btn:hover{background:var(--gold);color:var(--deep)}
+  .qty-num{font-size:1.4rem;font-weight:700;color:var(--gold);min-width:30px;text-align:center;font-family:'Cairo',sans-serif}
+  .order-textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:1rem;color:var(--cream);font-family:'Cairo',sans-serif;resize:none;outline:none;transition:border-color 0.3s;direction:rtl}
+  .order-textarea:focus{border-color:var(--gold)}
+  .order-textarea::placeholder{color:rgba(253,246,227,0.4)}
+  .order-total{background:rgba(201,168,76,0.1);border-radius:16px;padding:1.2rem;margin-bottom:1.5rem;border:1px solid rgba(201,168,76,0.3);font-family:'Cairo',sans-serif}
+  .total-row{display:flex;justify-content:space-between;margin-bottom:0.5rem;color:rgba(253,246,227,0.8)}
+  .total-final{display:flex;justify-content:space-between;font-size:1.3rem;font-weight:700;color:var(--gold);border-top:1px solid rgba(201,168,76,0.3);padding-top:0.8rem;margin-top:0.5rem}
+  .btn-confirm{width:100%;padding:1.2rem;border:none;border-radius:50px;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--accent),var(--purple));background-size:300%;color:white;font-size:1.1rem;font-weight:700;font-family:'Cairo',sans-serif;transition:all 0.3s;animation:btn-glow 2s linear infinite}
+  .btn-confirm:hover{transform:scale(1.03);box-shadow:0 8px 30px rgba(201,168,76,0.5)}
+
+  /* Toast */
+  .toast{position:fixed;bottom:2rem;left:2rem;background:linear-gradient(135deg,var(--green),#1b4332);border:1px solid rgba(255,255,255,0.2);border-radius:16px;padding:1rem 1.5rem;color:white;font-weight:700;z-index:9999;transform:translateX(-200%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);display:flex;align-items:center;gap:0.8rem;font-family:'Cairo',sans-serif;max-width:320px}
+  .toast.show{transform:translateX(0)}
+
+  /* CONTACT */
+  #contact{background:linear-gradient(135deg,#0a0300,#1a0800);padding-top:70px}
+  .contact-hero{text-align:center;padding:4rem 2rem 2rem}
+  .contact-title{font-family:'Times New Roman',Times,serif;font-size:clamp(2rem,5vw,3.5rem);background:linear-gradient(135deg,#ffd93d,var(--gold),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;max-width:1200px;margin:3rem auto;padding:0 2rem}
+  .contact-card{background:rgba(255,255,255,0.03);border:1px solid rgba(201,168,76,0.2);border-radius:24px;padding:2.5rem;transition:all 0.3s}
+  .contact-card:hover{border-color:var(--gold);transform:translateY(-5px)}
+  .contact-card h3{font-family:'Amiri',serif;color:var(--gold);font-size:1.6rem;margin-bottom:1.5rem}
+  .contact-item{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+  .contact-icon{width:45px;height:45px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+  .ci-email{background:linear-gradient(135deg,#4285f4,#0d47a1)}
+  .ci-phone{background:linear-gradient(135deg,#25d366,#128c7e)}
+  .ci-phone2{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+  .ci-address{background:linear-gradient(135deg,var(--accent),var(--warm))}
+  .contact-text{color:rgba(253,246,227,0.8);font-family:'Cairo',sans-serif}
+  .contact-text span{display:block;font-size:0.8rem;color:var(--gold);margin-bottom:0.2rem;font-weight:700}
+  .map-wrap{height:220px;border-radius:16px;overflow:hidden;margin-top:1.5rem;border:1px solid rgba(201,168,76,0.2)}
+  .map-wrap iframe{width:100%;height:100%;border:none}
+  .whatsapp-btn{display:flex;align-items:center;gap:0.8rem;padding:1rem 2rem;background:linear-gradient(135deg,#25d366,#128c7e);border:none;border-radius:50px;color:white;font-size:1rem;font-weight:700;cursor:pointer;transition:all 0.3s;text-decoration:none;margin-top:1rem;width:fit-content;font-family:'Cairo',sans-serif}
+  .whatsapp-btn:hover{transform:scale(1.05);box-shadow:0 5px 20px rgba(37,211,102,0.5)}
+  .msg-form{display:flex;flex-direction:column;gap:1rem}
+  .msg-input,.msg-textarea{background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:0.9rem 1.2rem;color:var(--cream);font-family:'Cairo',sans-serif;outline:none;transition:all 0.3s;direction:rtl}
+  .msg-input:focus,.msg-textarea:focus{border-color:var(--gold);background:rgba(201,168,76,0.05)}
+  .msg-textarea{resize:none;height:100px}
+  .msg-input::placeholder,.msg-textarea::placeholder{color:rgba(253,246,227,0.4)}
+  .hours-box{margin-top:2rem;padding:1.5rem;background:rgba(201,168,76,0.08);border-radius:16px;border:1px solid rgba(201,168,76,0.2)}
+  .hours-box h4{font-family:'Amiri',serif;color:var(--gold);font-size:1.2rem;margin-bottom:1rem}
+  .hours-table{width:100%;border-collapse:collapse}
+  .hours-table tr{border-bottom:1px solid rgba(201,168,76,0.1)}
+  .hours-table td{padding:0.6rem 0.3rem;font-family:'Cairo',sans-serif;font-size:0.88rem;color:rgba(253,246,227,0.8)}
+  .hours-table td:last-child{color:var(--gold);font-weight:600;text-align:left}
+  .friday-row td{color:#ff9f43!important}
+  .friday-row td:last-child{color:#ff9f43!important}
+
+  /* POEM PAGE */
+  #poem-page{background:radial-gradient(ellipse at center,#1a0a00,#0d0000);min-height:100vh;padding-top:70px}
+  .poem-section{min-height:calc(100vh - 70px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden}
+  .poem-bg-stars{position:absolute;inset:0;pointer-events:none}
+  .poem-star{position:absolute;width:2px;height:2px;background:white;border-radius:50%;animation:twinkle 3s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:0.2;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+  .poem-intro{font-family:'Cairo',sans-serif;font-size:0.9rem;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:2.5rem;opacity:0.7}
+  .poem-block{max-width:800px;position:relative}
+  .poem-line{font-family:'Scheherazade New',serif;font-size:clamp(1.5rem,4.5vw,2.5rem);line-height:2.3;cursor:pointer;display:block;background:linear-gradient(135deg,#ffd93d,#ff6b6b,#6bcb77,#4d96ff,#ff6bff,#ffd93d);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:rainbow-text 5s ease infinite;transition:all 0.3s;margin-bottom:0.2rem}
+  .poem-line:hover{animation:rainbow-text 0.8s ease infinite,poem-shake 0.5s ease forwards;filter:drop-shadow(0 0 20px rgba(201,168,76,0.8))}
+  @keyframes poem-shake{0%{transform:scale(1)}25%{transform:scale(1.05) rotate(1deg)}50%{transform:scale(1.08) rotate(-1deg)}75%{transform:scale(1.06)}100%{transform:scale(1.05)}}
+  .poem-divider{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:1.5rem auto}
+  .poem-sparkle{position:absolute;pointer-events:none;font-size:1.2rem;opacity:0;animation:sparkle-fly 1.2s ease forwards}
+  @keyframes sparkle-fly{0%{opacity:1;transform:scale(0)}50%{opacity:1;transform:scale(1.5) translate(var(--tx),var(--ty))}100%{opacity:0;transform:scale(0) translate(calc(var(--tx)*2),calc(var(--ty)*2))}}
+  .poem-copyright{margin-top:3rem;font-family:'Cairo',sans-serif;font-size:0.85rem;color:rgba(201,168,76,0.45);line-height:2}
+
+  /* ADMIN */
+  #admin{display:none;min-height:100vh;background:#0f0f1a}
+  .admin-login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+  .admin-login-card{background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:1px solid rgba(107,63,160,0.4);border-radius:24px;padding:3rem;max-width:400px;width:100%;box-shadow:0 0 60px rgba(107,63,160,0.2);text-align:center}
+  .admin-login-title{font-family:'Amiri',serif;font-size:2rem;color:#a78bfa;margin-bottom:0.5rem}
+  .admin-login-sub{color:rgba(255,255,255,0.5);margin-bottom:2rem;font-size:0.9rem;font-family:'Cairo',sans-serif}
+  .admin-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(107,63,160,0.3);border-radius:12px;padding:1rem;color:white;font-family:'Cairo',sans-serif;margin-bottom:1rem;outline:none;transition:border-color 0.3s;direction:ltr;text-align:left}
+  .admin-input:focus{border-color:#a78bfa}
+  .admin-input::placeholder{color:rgba(255,255,255,0.3)}
+  .admin-btn{width:100%;padding:1rem;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;font-size:1rem;font-weight:700;font-family:'Cairo',sans-serif;transition:all 0.3s}
+  .admin-btn:hover{transform:scale(1.03);box-shadow:0 5px 20px rgba(124,58,237,0.5)}
+  .admin-error{color:#f87171;font-size:0.85rem;margin-bottom:1rem;font-family:'Cairo',sans-serif}
+  .admin-dashboard{display:none;padding:2rem}
+  .admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid rgba(107,63,160,0.3);flex-wrap:wrap;gap:1rem}
+  .admin-header h1{font-family:'Amiri',serif;color:#a78bfa;font-size:1.8rem}
+  .admin-role-badge{padding:0.4rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;font-family:'Cairo',sans-serif;margin-top:0.3rem;display:inline-block}
+  .role-manager{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white}
+  .role-kitchen{background:linear-gradient(135deg,#f97316,#ea580c);color:white}
+  .admin-tabs{display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap}
+  .admin-tab{padding:0.6rem 1.5rem;border-radius:25px;border:1px solid rgba(107,63,160,0.4);background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;transition:all 0.3s;font-family:'Cairo',sans-serif;font-weight:600}
+  .admin-tab.active,.admin-tab:hover{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;border-color:transparent}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem;margin-bottom:2rem}
+  .stat-card{background:rgba(107,63,160,0.1);border:1px solid rgba(107,63,160,0.3);border-radius:16px;padding:1.5rem;text-align:center}
+  .stat-number{font-size:2.5rem;font-weight:900;color:#a78bfa;font-family:'Cairo',sans-serif}
+  .stat-label{color:rgba(255,255,255,0.6);font-size:0.85rem;margin-top:0.3rem;font-family:'Cairo',sans-serif}
+  .orders-table{width:100%;border-collapse:collapse}
+  .orders-table th{background:rgba(107,63,160,0.3);padding:1rem;text-align:right;color:#a78bfa;font-size:0.85rem;font-family:'Cairo',sans-serif}
+  .orders-table td{padding:0.9rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.8);font-size:0.9rem;font-family:'Cairo',sans-serif}
+  .orders-table tr:hover td{background:rgba(107,63,160,0.05)}
+  .status-badge{padding:0.3rem 0.8rem;border-radius:20px;font-size:0.75rem;font-weight:700;font-family:'Cairo',sans-serif}
+  .status-pending{background:rgba(251,191,36,0.2);color:#fbbf24}
+  .status-confirmed{background:rgba(34,197,94,0.2);color:#22c55e}
+  .status-delivered{background:rgba(59,130,246,0.2);color:#3b82f6}
+  .status-cancelled{background:rgba(239,68,68,0.2);color:#ef4444}
+  .action-btn-sm{padding:0.3rem 0.8rem;border-radius:8px;border:none;cursor:pointer;font-size:0.75rem;font-weight:700;transition:all 0.3s;margin-left:0.3rem;font-family:'Cairo',sans-serif}
+  .btn-confirm-order{background:rgba(34,197,94,0.2);color:#22c55e}
+  .btn-confirm-order:hover{background:#22c55e;color:white}
+  .btn-deliver{background:rgba(59,130,246,0.2);color:#3b82f6}
+  .btn-deliver:hover{background:#3b82f6;color:white}
+  .btn-cancel{background:rgba(239,68,68,0.2);color:#ef4444}
+  .btn-cancel:hover{background:#ef4444;color:white}
+  .admin-form{background:rgba(107,63,160,0.1);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+  .admin-form h3{color:#a78bfa;margin-bottom:1rem;font-family:'Amiri',serif;font-size:1.3rem}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+  .dish-manage-card{background:rgba(255,255,255,0.03);border:1px solid rgba(107,63,160,0.2);border-radius:16px;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem}
+  .dish-manage-left{display:flex;align-items:center;gap:1rem}
+  .dish-manage-name{color:white;font-weight:700;font-family:'Amiri',serif}
+  .dish-manage-price{color:#a78bfa;font-size:0.9rem;font-family:'Cairo',sans-serif}
+  .admin-logout{background:none;border:1px solid rgba(239,68,68,0.4);color:#ef4444;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;transition:all 0.3s;font-family:'Cairo',sans-serif}
+  .admin-logout:hover{background:#ef4444;color:white}
+
+  /* Footer */
+  .site-footer{background:rgba(0,0,0,0.5);border-top:1px solid rgba(201,168,76,0.15);padding:1.5rem 2rem;text-align:center;font-family:'Cairo',sans-serif;font-size:0.85rem;color:rgba(253,246,227,0.45);line-height:2}
+  .site-footer strong{color:var(--gold)}
+
+  /* Mobile */
+  @media(max-width:768px){
+    .nav-links{display:none;position:fixed;top:70px;left:0;right:0;background:rgba(26,10,0,0.98);flex-direction:column;padding:1rem;gap:0.3rem;z-index:999}
+    .nav-links.open{display:flex}
+    .hamburger{display:flex}
+    .contact-grid{grid-template-columns:1fr}
+    .form-row{grid-template-columns:1fr}
+    .dishes-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));padding:1rem}
+    .extras-grid{grid-template-columns:1fr}
+    .order-modal{padding:1.5rem}
+    .preview-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  }
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:#1a0800}
+  ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+</style>
 </head>
-<body data-theme="dark">
-    <!-- Notification Toast -->
-    <div id="notification" class="notification">
-        <div class="notification-content">
-            <div class="notification-icon" id="notificationIcon">✓</div>
-            <div class="notification-text">
-                <div class="notification-title" id="notificationTitle">Success</div>
-                <div class="notification-message" id="notificationMessage">Operation completed successfully</div>
-            </div>
-        </div>
+<body>
+
+<!-- ===== شريط التنقل ===== -->
+<nav id="mainNav">
+  <div class="nav-brand" onclick="showPage('home')">
+    <div class="nav-logo-img">
+      <!-- استبدل هذا بـ: <img src="logo.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover" alt="فارينا"> -->
+      🌾
+    </div>
+    <span class="nav-title">فارينا</span>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a onclick="showPage('home');closeMenu()" id="nav-home" class="active"><span>الرئيسية</span></a>
+    <a onclick="showPage('menu');closeMenu()" id="nav-menu"><span>القائمة</span></a>
+    <a onclick="showPage('contact');closeMenu()" id="nav-contact"><span>تواصل معنا</span></a>
+    <a onclick="showPage('poem-page');closeMenu()" id="nav-poem-page"><span>وداع ✨</span></a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ========== الرئيسية ========== -->
+<div id="home" class="page active">
+  <span class="floating-icon" style="top:20%;right:5%;animation-delay:0s">🍕</span>
+  <span class="floating-icon" style="top:60%;right:9%;animation-delay:1s">🌿</span>
+  <span class="floating-icon" style="top:30%;left:5%;animation-delay:2s">🍷</span>
+  <span class="floating-icon" style="top:75%;left:9%;animation-delay:0.5s">🧁</span>
+  <span class="floating-icon" style="top:50%;left:48%;animation-delay:1.5s">✨</span>
+
+  <div class="hero">
+    <div class="hero-bg"></div>
+
+    <!-- شعار الصفحة الرئيسية — ضع صورتك هنا -->
+    <div class="hero-logo-ring">
+      <div class="hero-logo-inner">
+        <!--
+          ═══════════════════════════════════════
+          لإضافة شعارك: احذف السطر التالي
+          وضع مكانه: <img src="YOUR_LOGO.png" style="width:150px;height:150px;border-radius:50%;object-fit:cover">
+          ═══════════════════════════════════════
+        -->
+        🌾
+      </div>
     </div>
 
-    <!-- Login Screen -->
-    <div id="loginContainer" class="login-container">
-        <div class="login-box">
-            <div class="login-logo">INCHON</div>
-            <p class="login-subtitle">ADMINISTRATION PORTAL</p>
-            <form class="login-form" id="loginForm">
-                <div class="form-group">
-                    <input type="text" id="username" placeholder="Username" required autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
-                </div>
-                <button type="submit" class="btn btn-primary login-btn">LOGIN</button>
-                <div class="login-error" id="loginError">Invalid username or password</div>
-            </form>
-        </div>
+    <h1 class="restaurant-name">Farina</h1>
+    <p class="tagline">حيثُ تُحكى كلُّ وجبةٍ كقصيدة</p>
+    <p class="hero-desc">
+      مرحباً بكم في <strong>مطعم فارينا</strong> — ملاذ المذاقات الاستثنائية، حيث يلتقي الإرث بالإبداع. نحرص على إعداد كل طبق بشغف حقيقي، مستخدمين أجود المكونات الطازجة المختارة بعناية يومياً. من اللقمة الأولى حتى الأخيرة، كل لحظة هنا احتفاءٌ بالطعام والعائلة وفن المائدة الراقية. سواء أتيتم لعشاء حميم أو مناسبة خاصة، يعدكم فارينا برحلة طهي لا تُنسى.
+    </p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('menu')">🍽️ استعرض قائمتنا</button>
+      <button class="btn-outline" onclick="showPage('contact')">📞 احجز طاولتك</button>
     </div>
+  </div>
 
-    <!-- Main Content -->
-    <div id="mainContent" class="main-content">
-    <!-- Galaxy Background -->
-    <div class="galaxy-bg">
-        <div class="stars" id="stars"></div>
-        <div class="nebula" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,217,255,0.3), transparent); top: 20%; left: 10%;"></div>
-        <div class="nebula" style="width: 300px; height: 300px; background: radial-gradient(circle, rgba(189,0,255,0.3), transparent); bottom: 30%; right: 15%; animation-delay: -5s;"></div>
-        <div class="nebula" style="width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,0,110,0.2), transparent); top: 50%; left: 50%; animation-delay: -10s;"></div>
+  <!-- معاينة القائمة في الرئيسية -->
+  <div class="home-menu-preview">
+    <h2 class="section-title">أبرز أطباقنا</h2>
+    <div class="preview-grid" id="homeMenuPreview"></div>
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn-primary" onclick="showPage('menu')">عرض القائمة كاملة ←</button>
     </div>
+  </div>
 
-    <div class="container">
-        <header>
-            <button class="logout-btn" onclick="logout()">Logout</button>
-            <div class="theme-toggle">
-                <button class="theme-btn active" data-theme="dark" onclick="setTheme('dark')">Dark</button>
-                <button class="theme-btn" data-theme="blue" onclick="setTheme('blue')">Blue</button>
-                <button class="theme-btn" data-theme="cream" onclick="setTheme('cream')">Cream</button>
-            </div>
-            <h1>INCHON INSTITUTE</h1>
-            <p class="subtitle">ADMINISTRATION PORTAL</p>
-        </header>
-
-        <!-- Navigation -->
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="showTab('admission')">New Admission</button>
-            <button class="tab-btn" onclick="showTab('attendance')">Attendance</button>
-            <button class="tab-btn" onclick="showTab('fees')">Fees</button>
-            <button class="tab-btn" onclick="showTab('rates')">Rates</button>
-            <button class="tab-btn" onclick="showTab('status')">Status</button>
-            <button class="tab-btn" onclick="showTab('reports')">Monthly Reports</button>
-        </div>
-
-        <!-- Admission Section -->
-        <div id="admission" class="content-section active">
-            <div class="form-container">
-                <h2 style="margin-bottom: 30px; font-family: 'Orbitron', sans-serif; color: var(--primary);">NEW STUDENT ADMISSION</h2>
-                <form id="admissionForm">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Student Name *</label>
-                            <input type="text" id="studentName" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Student ID</label>
-                            <input type="text" id="studentId" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Email *</label>
-                            <input type="email" id="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Phone *</label>
-                            <input type="tel" id="phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Course *</label>
-                            <select id="course" required>
-                                <option value="">Select Course</option>
-                                <option value="Web Development">Web Development</option>
-                                <option value="Data Science">Data Science</option>
-                                <option value="AI/ML">AI/ML</option>
-                                <option value="Cyber Security">Cyber Security</option>
-                                <option value="Mobile Development">Mobile Development</option>
-                                <option value="Cloud Computing">Cloud Computing</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Admission Date *</label>
-                            <input type="date" id="admissionDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Fee Amount ($) *</label>
-                            <input type="number" id="feeAmount" required min="0" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label>Course Duration (months) *</label>
-                            <input type="number" id="courseDuration" required min="1">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Address</label>
-                        <textarea id="address"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Save Student</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Attendance Section -->
-        <div id="attendance" class="content-section">
-            <div class="table-container">
-                <h2 style="margin-bottom: 20px; font-family: 'Orbitron', sans-serif; color: var(--primary);">ATTENDANCE MANAGEMENT</h2>
-                <input type="text" class="search-box" id="attendanceSearch" placeholder="Search students..." onkeyup="filterTable('attendanceTable', this.value)">
-                <table id="attendanceTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Course</th>
-                            <th>Present Days</th>
-                            <th>Absent Days</th>
-                            <th>Attendance %</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="attendanceBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Fees Section -->
-        <div id="fees" class="content-section">
-            <div class="table-container">
-                <h2 style="margin-bottom: 20px; font-family: 'Orbitron', sans-serif; color: var(--primary);">FEE MANAGEMENT</h2>
-                <input type="text" class="search-box" id="feesSearch" placeholder="Search students..." onkeyup="filterTable('feesTable', this.value)">
-                <table id="feesTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Course</th>
-                            <th>Total Fee</th>
-                            <th>Paid</th>
-                            <th>Balance</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="feesBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Rates Section -->
-        <div id="rates" class="content-section">
-            <div class="table-container">
-                <h2 style="margin-bottom: 20px; font-family: 'Orbitron', sans-serif; color: var(--primary);">STUDENT RATINGS</h2>
-                <input type="text" class="search-box" id="ratesSearch" placeholder="Search students..." onkeyup="filterTable('ratesTable', this.value)">
-                <table id="ratesTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Course</th>
-                            <th>Performance Rating</th>
-                            <th>Attendance Rating</th>
-                            <th>Overall Rating</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ratesBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Status Section -->
-        <div id="status" class="content-section">
-            <div class="table-container">
-                <h2 style="margin-bottom: 20px; font-family: 'Orbitron', sans-serif; color: var(--primary);">COURSE STATUS</h2>
-                <input type="text" class="search-box" id="statusSearch" placeholder="Search students..." onkeyup="filterTable('statusTable', this.value)">
-                <table id="statusTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Course</th>
-                            <th>Start Date</th>
-                            <th>Progress %</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="statusBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Reports Section -->
-        <div id="reports" class="content-section">
-            <div class="form-container">
-                <h2 style="margin-bottom: 30px; font-family: 'Orbitron', sans-serif; color: var(--primary);">MONTHLY REPORTS</h2>
-                
-                <div class="report-controls">
-                    <div class="month-selector">
-                        <label>Select Month:</label>
-                        <select id="reportMonth">
-                            <option value="">Current Month</option>
-                        </select>
-                        <select id="reportYear">
-                        </select>
-                    </div>
-                    <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
-                    <button class="btn btn-success" onclick="downloadReport()">Download Report</button>
-                    <button class="btn btn-danger" onclick="deleteMonthData()">Delete Month Data</button>
-                </div>
-
-                <div class="stats-grid" id="reportStats">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalStudents">0</div>
-                        <div class="stat-label">Total Students</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalRevenue">$0</div>
-                        <div class="stat-label">Total Revenue</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="completedCourses">0</div>
-                        <div class="stat-label">Completed</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="activeCourses">0</div>
-                        <div class="stat-label">Active</div>
-                    </div>
-                </div>
-
-                <div id="reportData" class="table-container" style="margin-top: 30px; display: none;">
-                    <h3 style="color: var(--primary); margin-bottom: 20px;">Report Details</h3>
-                    <div id="reportContent"></div>
-                </div>
-            </div>
-        </div>
+  <!-- لماذا فارينا -->
+  <div class="features">
+    <h2 class="section-title">لماذا تختار فارينا؟</h2>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon">👨‍🍳</div><h3>طهاة محترفون</h3><p>طاقمنا من الطهاة الحائزين على جوائز يحملون عقوداً من الخبرة في كل طبق.</p></div>
+      <div class="feature-card"><div class="feature-icon">🌾</div><h3>مكونات طازجة</h3><p>من المزرعة إلى مائدتكم — نختار أجود المنتجات الطازجة كل صباح.</p></div>
+      <div class="feature-card"><div class="feature-icon">✨</div><h3>وصفات مميزة</h3><p>وصفات حصرية ابتكرها طهاة فارينا — نكهات لن تجدوها في أي مكان آخر.</p></div>
+      <div class="feature-card"><div class="feature-icon">🍷</div><h3>تناسق رائع</h3><p>مشروبات مختارة بعناية ترفع كل طبق إلى مستوى آخر من المتعة.</p></div>
+      <div class="feature-card"><div class="feature-icon">🏡</div><h3>أجواء دافئة</h3><p>ديكور أنيق يبعث على الراحة — دافئ وترحيبي لا يُنسى.</p></div>
     </div>
+  </div>
 
-    <!-- Edit Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <h2 style="color: var(--primary); margin-bottom: 20px; font-family: 'Orbitron', sans-serif;">EDIT RECORD</h2>
-            <div id="editFormContainer"></div>
-            <div class="modal-buttons">
-                <button class="btn btn-success" onclick="saveEdit()">Save Changes</button>
-                <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
-            </div>
-        </div>
+  <footer class="site-footer">
+    <strong>© 2025 مطعم فارينا — جميع الحقوق محفوظة</strong><br>
+    تصميم وتطوير حصري لمطعم فارينا · يُحظر نسخ أو توزيع أي محتوى من هذا الموقع دون إذن خطي مسبق
+  </footer>
+</div>
+
+<!-- ========== القائمة ========== -->
+<div id="menu" class="page">
+  <div class="menu-hero">
+    <h1 class="menu-title">قائمة الطعام</h1>
+    <p class="menu-subtitle">أطباق محضَّرة بعشق، تُقدَّم بشغف</p>
+  </div>
+  <div class="menu-filter">
+    <button class="filter-btn active" onclick="filterMenu('all',this)">جميع الأطباق</button>
+    <button class="filter-btn" onclick="filterMenu('main',this)">الأطباق الرئيسية</button>
+    <button class="filter-btn" onclick="filterMenu('sweet',this)">الحلويات</button>
+  </div>
+  <div class="dishes-grid" id="dishesGrid"></div>
+  <footer class="site-footer">
+    <strong>© 2025 مطعم فارينا — جميع الحقوق محفوظة</strong><br>
+    الأسعار شاملة الضريبة · تخضع القائمة للتغيير دون إشعار مسبق
+  </footer>
+</div>
+
+<!-- ========== تواصل معنا ========== -->
+<div id="contact" class="page">
+  <div class="contact-hero">
+    <h1 class="contact-title">تواصل معنا</h1>
+    <p style="color:rgba(253,246,227,0.6);margin-top:0.5rem;font-family:'Amiri',serif;font-style:italic;font-size:1.2rem">يسعدنا سماع رأيكم دائماً</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <h3>📍 معلومات التواصل</h3>
+      <div class="contact-item">
+        <div class="contact-icon ci-email"><i class="fas fa-envelope"></i></div>
+        <div class="contact-text"><span>البريد الإلكتروني</span>almegdadismail0@gmail.com</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon ci-phone"><i class="fas fa-mobile-alt"></i></div>
+        <div class="contact-text"><span>الجوال / واتساب</span>‎+91 76392 47886</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon ci-phone2"><i class="fas fa-phone"></i></div>
+        <div class="contact-text"><span>الهاتف الثابت</span>‎+91 76392 47886</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon ci-address"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="contact-text"><span>العنوان</span>مطعم فارينا، الشارع الرئيسي — يمكنك تغيير هذا العنوان لاحقاً</div>
+      </div>
+      <a href="https://wa.me/917639247886?text=مرحباً%20مطعم%20فارينا،%20أود%20الاستفسار%20عن%20حجز%20طاولة" target="_blank" class="whatsapp-btn">
+        <i class="fab fa-whatsapp" style="font-size:1.3rem"></i> تواصل عبر واتساب
+      </a>
+      <!-- خريطة — يمكن تغيير الموقع لاحقاً -->
+      <div class="map-wrap">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.234!2d77.2090!3d28.6139!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x52c2b7494e204dce!2sNew%20Delhi%2C%20India!5e0!3m2!1sar!2s!4v1700000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
     </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h2 style="color: var(--danger); margin-bottom: 20px; font-family: 'Orbitron', sans-serif;">CONFIRM DELETE</h2>
-            <p style="margin-bottom: 30px; font-size: 1.1rem;">Are you sure you want to delete this record?</p>
-            <div class="modal-buttons">
-                <button class="btn btn-danger" onclick="confirmDelete()">Yes, Delete</button>
-                <button class="btn btn-primary" onclick="closeModal()">Cancel</button>
-            </div>
-        </div>
+    <div class="contact-card">
+      <h3>✉️ أرسل رسالة</h3>
+      <div class="msg-form">
+        <input class="msg-input" placeholder="اسمك الكريم" id="msg-name">
+        <input class="msg-input" placeholder="بريدك الإلكتروني" id="msg-email">
+        <input class="msg-input" placeholder="الموضوع" id="msg-subject">
+        <textarea class="msg-textarea" placeholder="رسالتك..." id="msg-body"></textarea>
+        <button class="btn-primary" onclick="sendMessage()" style="width:100%">إرسال الرسالة ✨</button>
+      </div>
+      <div class="hours-box">
+        <h4>🕐 أوقات العمل</h4>
+        <table class="hours-table">
+          <tr><td>الأحد</td><td>8:00 ص — 11:00 م</td></tr>
+          <tr><td>الاثنين</td><td>8:00 ص — 11:00 م</td></tr>
+          <tr><td>الثلاثاء</td><td>8:00 ص — 11:00 م</td></tr>
+          <tr><td>الأربعاء</td><td>8:00 ص — 11:00 م</td></tr>
+          <tr><td>الخميس</td><td>8:00 ص — 11:00 م</td></tr>
+          <tr class="friday-row">
+            <td>الجمعة 🕌</td>
+            <td>8:00 ص — 11:00 ص<br><span style="font-size:0.8rem;opacity:0.7">ثمّ من</span><br>2:00 م — 11:00 م</td>
+          </tr>
+          <tr><td>السبت</td><td>8:00 ص — 11:00 م</td></tr>
+        </table>
+      </div>
     </div>
-    </div><!-- End Main Content -->
+  </div>
+  <footer class="site-footer">
+    <strong>© 2025 مطعم فارينا — جميع الحقوق محفوظة</strong><br>
+    يُحظر نسخ أو توزيع أي محتوى من هذا الموقع دون إذن خطي مسبق
+  </footer>
+</div>
 
-    <script>
-        // Authentication
-        const CREDENTIALS = {
-            username: 'Inchon',
-            password: 'Inchon123'
-        };
+<!-- ========== صفحة الوداع / القصيدة ========== -->
+<div id="poem-page" class="page">
+  <div class="poem-section">
+    <div class="poem-bg-stars" id="poemStars"></div>
+    <div class="poem-intro">✦ شكراً لزيارتكم ✦</div>
+    <div class="poem-block" id="poemBlock">
+      <div class="poem-line" onclick="spawnSparkles(this)">حَلَلْتُمْ بِنَا أهلاً.. وَطِبْتُمْ إقامةً</div>
+      <div class="poem-line" onclick="spawnSparkles(this)">وَغَادَرْتُمُـونَا وَالوِدَادُ كَمَا هُـوَا</div>
+      <div class="poem-divider"></div>
+      <div class="poem-line" onclick="spawnSparkles(this)">فَـإِنْ كَانَ زَادُ المِلْحِ قَدْ نَالَ مَيْلَـكُمْ</div>
+      <div class="poem-line" onclick="spawnSparkles(this)">فَـشَوْقُ لِقَاكُـمْ فِـي الحَـنَايَا قَدِ انْطَوَى</div>
+    </div>
+    <div class="poem-copyright">
+      © 2025 مطعم فارينا — جميع الحقوق محفوظة<br>
+      هذه الأبيات ملكٌ حصري لمطعم فارينا · يُحظر إعادة نشرها دون إذن خطي مسبق
+    </div>
+  </div>
+</div>
 
-        // Check if user is logged in
-        function checkAuth() {
-            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-            if (isLoggedIn === 'true') {
-                showMainContent();
-            } else {
-                showLogin();
-            }
-        }
+<!-- ========== لوحة الأدمن (مخفية) - الوصول عبر: index.html#admin ========== -->
+<div id="admin" class="page">
+  <div class="admin-login" id="adminLogin">
+    <div class="admin-login-card">
+      <div style="font-size:2.5rem;margin-bottom:1rem">🔐</div>
+      <h2 class="admin-login-title">لوحة الإدارة</h2>
+      <p class="admin-login-sub">أدخل بياناتك للوصول إلى لوحة التحكم</p>
+      <div id="adminError" class="admin-error" style="display:none"></div>
+      <input class="admin-input" type="text" placeholder="Username" id="adminUser">
+      <input class="admin-input" type="password" placeholder="Password" id="adminPass">
+      <button class="admin-btn" onclick="adminLogin()">دخول</button>
+    </div>
+  </div>
+  <div class="admin-dashboard" id="adminDashboard">
+    <div class="admin-header">
+      <div>
+        <h1>لوحة إدارة فارينا 🌾</h1>
+        <div id="adminRoleBadge" class="admin-role-badge"></div>
+      </div>
+      <button class="admin-logout" onclick="adminLogout()">تسجيل الخروج</button>
+    </div>
+    <div class="admin-tabs" id="adminTabs"></div>
+    <div id="adminContent"></div>
+  </div>
+</div>
 
-        function showLogin() {
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('mainContent').classList.remove('active');
-        }
+<!-- ========== نافذة الطلب ========== -->
+<div id="order-panel">
+  <div class="order-modal">
+    <button class="modal-close" onclick="closeOrder()">✕</button>
+    <h2 class="modal-title">🛒 تفاصيل طلبك</h2>
+    <div class="order-dish-preview">
+      <div>
+        <div class="order-dish-name" id="orderDishName">اسم الطبق</div>
+        <div class="order-dish-price" id="orderDishPrice">0.00 ر.س</div>
+      </div>
+      <span class="order-dish-emoji" id="orderEmoji">🍽️</span>
+    </div>
+    <div class="form-section">
+      <label class="form-label">الكمية</label>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+        <span class="qty-num" id="qtyNum">1</span>
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+      </div>
+    </div>
+    <div class="form-section">
+      <label class="form-label">طريقة الاستلام</label>
+      <div class="radio-group" id="dineGroup">
+        <div class="radio-opt selected" onclick="selectDine(this,'تناول في المطعم')"><div class="radio-dot"></div><span>🍽️ تناول في المطعم</span></div>
+        <div class="radio-opt" onclick="selectDine(this,'استلام خارجي')"><div class="radio-dot"></div><span>🥡 استلام خارجي</span></div>
+      </div>
+    </div>
+    <div class="form-section">
+      <label class="form-label">الإضافات والصلصات</label>
+      <div class="extras-grid" id="extrasGrid"></div>
+    </div>
+    <div class="form-section">
+      <label class="form-label">رسالة للطاهي 👨‍🍳</label>
+      <textarea class="order-textarea" id="chefComment" rows="3" placeholder="أي طلبات خاصة، حساسية غذائية، أو ملاحظات للطاهي..."></textarea>
+    </div>
+    <div class="order-total">
+      <div class="total-row"><span>سعر الطبق:</span><span id="totalBase">0.00 ر.س</span></div>
+      <div class="total-row"><span>الإضافات:</span><span id="totalExtras">0.00 ر.س</span></div>
+      <div class="total-final"><span>الإجمالي:</span><span id="totalFinal">0.00 ر.س</span></div>
+    </div>
+    <button class="btn-confirm" onclick="confirmOrder()">✨ تأكيد الطلب ✨</button>
+  </div>
+</div>
 
-        function showMainContent() {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('mainContent').classList.add('active');
-        }
+<!-- إشعار -->
+<div class="toast" id="toast">
+  <i class="fas fa-check-circle" style="font-size:1.3rem"></i>
+  <span id="toastMsg"></span>
+</div>
 
-        // Login form handler
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
+<script>
+// ===== بيانات الأطباق =====
+const DISHES_DEFAULT = [
+  {id:1,name:"ريزوتو الكمأة",desc:"أرز أربوريو كريمي مع رقائق الكمأة السوداء وجبن البارميزان العتيق",price:89.99,emoji:"🍚",bg:"linear-gradient(135deg,#3d1c02,#7b3e00)",type:"main",badge:"popular"},
+  {id:2,name:"سمك البحر المشوي",desc:"سمك باس البحر المقلي بزبدة الليمون والكبر والأعشاب الطازجة",price:115.00,emoji:"🐟",bg:"linear-gradient(135deg,#001e3c,#0a3d62)",type:"main",badge:"new"},
+  {id:3,name:"رف ضلوع الخروف الملكي",desc:"ضلوع خروف فرنسية بصلصة إكليل الجبل والخضراوات المشوية",price:135.00,emoji:"🥩",bg:"linear-gradient(135deg,#4a0000,#8b0000)",type:"main",badge:"popular"},
+  {id:4,name:"معكرونة فارينا",desc:"معكرونة طازجة محضَّرة يدوياً بصلصة الفطر البري والقشدة",price:72.00,emoji:"🍝",bg:"linear-gradient(135deg,#4a3000,#8b5500)",type:"main",badge:""},
+  {id:5,name:"ويلينغتون الدجاج",desc:"صدر دجاج طري ملفوف بفطيرة ذهبية مع مزيج الفطر",price:99.00,emoji:"🍗",bg:"linear-gradient(135deg,#3d2600,#7a5000)",type:"main",badge:"new"},
+  {id:6,name:"حساء جراد البحر",desc:"شوربة كريمية غنية مع جراد البحر الطازج ولمسة براندي",price:78.00,emoji:"🦞",bg:"linear-gradient(135deg,#4a1800,#8b3300)",type:"main",badge:""},
+  {id:7,name:"لحم واغيو الفاخر",desc:"أجود لحم واغيو مع زبدة الكمأة والمرافق الموسمية",price:195.00,emoji:"🥩",bg:"linear-gradient(135deg,#3a0000,#6b0000)",type:"main",badge:"popular"},
+  {id:8,name:"طاجن خضار مغربي",desc:"خضروات مطهوة ببهارات مغربية مع الكسكس واللوز",price:65.00,emoji:"🥘",bg:"linear-gradient(135deg,#2d4a00,#4a7a00)",type:"main",badge:""},
+  {id:9,name:"باييا المأكولات البحرية",desc:"باييا إسبانية أصيلة مع الروبيان والبلح والمحار",price:105.00,emoji:"🥘",bg:"linear-gradient(135deg,#4a3900,#8b6a00)",type:"main",badge:"popular"},
+  {id:10,name:"ساق البطة المطهوة",desc:"بطة مطهوة ببطء مع صلصة الكرز وبطاطس دوفينواز",price:119.00,emoji:"🦆",bg:"linear-gradient(135deg,#3a1a00,#6b3200)",type:"main",badge:""},
+  {id:11,name:"كاربتشيو الفطر",desc:"شرائح البورتوبيلو الرفيعة مع زيت الكمأة والجرجير",price:58.00,emoji:"🍄",bg:"linear-gradient(135deg,#1a1a0d,#3d3d1a)",type:"main",badge:""},
+  {id:12,name:"كفتة الخروف المتبلة",desc:"أسياخ لحم خروف مفروم معطر بالبهارات مع تزيكي وخبز البيتا",price:75.00,emoji:"🍢",bg:"linear-gradient(135deg,#4a1f00,#7a3300)",type:"main",badge:"new"},
+  {id:13,name:"سلطة البوراتا",desc:"جبن بوراتا طازج مع طماطم الموروث والريحان وصلصة البلسميك",price:62.00,emoji:"🧀",bg:"linear-gradient(135deg,#2a3a00,#4a6600)",type:"main",badge:""},
+  {id:14,name:"تارتار السلمون المدخن",desc:"سلمون مدخن مقطع يدوياً مع الكبر وكريمة الشبت على البليني",price:82.00,emoji:"🐠",bg:"linear-gradient(135deg,#4a1e1e,#7a2e2e)",type:"main",badge:""},
+  {id:15,name:"طبق فارينا الكبير",desc:"اختيار الشيف من المقبلات الموسمية والمغمسات والخبز الحرفي",price:159.00,emoji:"🍱",bg:"linear-gradient(135deg,#1a3a1a,#2d6a2d)",type:"main",badge:"popular"},
+  {id:16,name:"كريم بروليه",desc:"كاسترد فرنسي كلاسيكي مع طبقة سكر محروق وحبوب الفانيليا",price:45.00,emoji:"🍮",bg:"linear-gradient(135deg,#4a3900,#7a6000)",type:"sweet",badge:"sweet"},
+  {id:17,name:"فوندان الشوكولاتة",desc:"كيكة لافا الشوكولاتة الدافئة مع جيلاتو الفانيليا وكومبوت التوت",price:48.00,emoji:"🍫",bg:"linear-gradient(135deg,#2a0a00,#5a1a00)",type:"sweet",badge:"sweet"},
+  {id:18,name:"بانا كوتا المانجو",desc:"حلوى إيطالية كريمية مع كولي المانجو الطازج وفاكهة العاطفة",price:42.00,emoji:"🥭",bg:"linear-gradient(135deg,#4a2e00,#8b5500)",type:"sweet",badge:"sweet"},
+  {id:19,name:"برج البقلاوة",desc:"طبقات من العجين المورق مع الفستق وعسل ماء الزهر",price:38.00,emoji:"🍯",bg:"linear-gradient(135deg,#3a3000,#6a5500)",type:"sweet",badge:"sweet"},
+  {id:20,name:"سوفليه الفستق",desc:"سوفليه خفيف كالهواء مع الفستق المجروش وكريمة الهيل",price:52.00,emoji:"🟢",bg:"linear-gradient(135deg,#1a3a00,#2d6a00)",type:"sweet",badge:"sweet"},
+  {id:21,name:"تيراميسو الفراولة",desc:"طبقات إيطالية مستوحاة من الفراولة الطازجة والماسكاربوني",price:44.00,emoji:"🍓",bg:"linear-gradient(135deg,#4a0020,#8b003a)",type:"sweet",badge:"sweet"},
+  {id:22,name:"آيس كريم الزعفران",desc:"آيس كريم الزعفران والهيل المحضَّر محلياً مع بتلات الورد",price:35.00,emoji:"🍦",bg:"linear-gradient(135deg,#4a3800,#8b6a00)",type:"sweet",badge:"sweet"},
+  {id:23,name:"بروفيتيرول ملكي",desc:"كرات شو مملوءة بكريمة شانتيلي ومسكوبة بالشوكولاتة الداكنة",price:40.00,emoji:"🧁",bg:"linear-gradient(135deg,#3a0a3a,#6a0a6a)",type:"sweet",badge:"sweet"},
+  {id:24,name:"تارت تاتان فارينا",desc:"تارت التفاح المقلوب المكرمل مع صلصة القرفة الإنجليزية",price:46.00,emoji:"🥧",bg:"linear-gradient(135deg,#3a2000,#6a3a00)",type:"sweet",badge:"sweet"},
+  {id:25,name:"تشيز كيك ماء الورد",desc:"تشيز كيك مخبوز بعبير ماء الورد الفارسي وقشرة الفستق",price:44.00,emoji:"🌹",bg:"linear-gradient(135deg,#4a0030,#8a0060)",type:"sweet",badge:"sweet"}
+];
 
-            if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
-                sessionStorage.setItem('isLoggedIn', 'true');
-                errorDiv.style.display = 'none';
-                showNotification('Login Successful', 'Welcome to Inchon Institute Administration', 'success');
-                setTimeout(() => {
-                    showMainContent();
-                }, 1000);
-            } else {
-                errorDiv.style.display = 'block';
-                showNotification('Login Failed', 'Invalid username or password', 'error');
-            }
-        });
+const EXTRAS = [
+  {name:"كاتشب",price:2,emoji:"🍅"},
+  {name:"مسطردة",price:2,emoji:"🟡"},
+  {name:"مايونيز",price:2.5,emoji:"🤍"},
+  {name:"صلصة BBQ",price:2.5,emoji:"🟤"},
+  {name:"صلصة حارة",price:2,emoji:"🌶️"},
+  {name:"صلصة الثوم",price:3,emoji:"🧄"},
+  {name:"خبز إضافي",price:5,emoji:"🍞"},
+  {name:"سلطة جانبية",price:9,emoji:"🥗"},
+  {name:"حصة إضافية",price:18,emoji:"➕"},
+  {name:"خالٍ من الغلوتين",price:4,emoji:"🌾"}
+];
 
-        // Logout function
-        function logout() {
-            sessionStorage.removeItem('isLoggedIn');
-            showNotification('Logged Out', 'You have been logged out successfully', 'success');
-            setTimeout(() => {
-                showLogin();
-                document.getElementById('loginForm').reset();
-            }, 1500);
-        }
+const ADMIN_CREDS = {
+  manager:{user:'manager',pass:'Farina@Manager2024',role:'manager'},
+  kitchen:{user:'kitchen',pass:'Kitchen@Farina2024',role:'kitchen'}
+};
 
-        // Theme management
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            
-            // Update active button
-            document.querySelectorAll('.theme-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.getAttribute('data-theme') === theme) {
-                    btn.classList.add('active');
-                }
-            });
-        }
+let currentDish=null, qty=1, dineType="تناول في المطعم", selectedExtras=[];
+let adminRole=null;
 
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        setTheme(savedTheme);
+function getOrders(){return JSON.parse(localStorage.getItem('farina_orders')||'[]')}
+function setOrders(o){localStorage.setItem('farina_orders',JSON.stringify(o))}
+function getDishes(){return JSON.parse(localStorage.getItem('farina_dishes')||JSON.stringify(DISHES_DEFAULT))}
+function setDishes(d){localStorage.setItem('farina_dishes',JSON.stringify(d))}
 
-        // Notification System
-        function showNotification(title, message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const notificationTitle = document.getElementById('notificationTitle');
-            const notificationMessage = document.getElementById('notificationMessage');
-            const notificationIcon = document.getElementById('notificationIcon');
+// ===== تنقل =====
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const el=document.getElementById('nav-'+page);
+  if(el)el.classList.add('active');
+  window.scrollTo(0,0);
+  if(page==='menu')renderDishes('all');
+  if(page==='home')renderHomePreview();
+  if(page==='poem-page')generateStars();
+  if(page==='menu'){document.querySelector('.filter-btn').classList.add('active')}
+}
+function toggleMenu(){document.getElementById('navLinks').classList.toggle('open')}
+function closeMenu(){document.getElementById('navLinks').classList.remove('open')}
 
-            // Set content
-            notificationTitle.textContent = title;
-            notificationMessage.textContent = message;
+// ===== معاينة الرئيسية =====
+function renderHomePreview(){
+  const dishes=getDishes();
+  const preview=[...dishes.filter(d=>d.type==='main').slice(0,4),...dishes.filter(d=>d.type==='sweet').slice(0,4)];
+  const g=document.getElementById('homeMenuPreview');
+  if(!g)return;
+  g.innerHTML=preview.map(d=>`
+    <div class="preview-card" onclick="showPage('menu')">
+      <div class="preview-img" style="background:${d.bg}">
+        <span style="font-size:3.5rem;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5))">${d.emoji}</span>
+      </div>
+      <div class="preview-info">
+        <span class="preview-name">${d.name}</span>
+        <span class="preview-price">${d.price.toFixed(2)} ر.س</span>
+      </div>
+    </div>`).join('');
+}
 
-            // Set icon based on type
-            const icons = {
-                success: '✓',
-                error: '✕',
-                warning: '⚠',
-                info: 'ℹ'
-            };
-            notificationIcon.textContent = icons[type] || icons.success;
+// ===== القائمة =====
+function renderDishes(filter){
+  const dishes=getDishes();
+  const filtered=filter==='all'?dishes:dishes.filter(d=>d.type===filter);
+  document.getElementById('dishesGrid').innerHTML=filtered.map((d,i)=>`
+    <div class="dish-card" style="animation-delay:${i*0.06}s">
+      <div class="dish-img-wrap">
+        <div class="dish-color-bg" style="background:${d.bg}">
+          <span style="position:relative;z-index:1;font-size:5.5rem;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.5))">${d.emoji}</span>
+        </div>
+        ${d.badge?`<span class="dish-badge ${d.badge}">${d.badge==='new'?'جديد':d.badge==='popular'?'الأكثر طلباً':'حلويات'}</span>`:''}
+      </div>
+      <div class="dish-info">
+        <div class="dish-name">${d.name}</div>
+        <div class="dish-desc">${d.desc}</div>
+        <div class="dish-footer">
+          <span class="dish-price">${d.price.toFixed(2)} ر.س</span>
+          <button class="order-btn" onclick="openOrder(${d.id})">اطلب الآن</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
 
-            // Remove all type classes
-            notification.classList.remove('success', 'error', 'warning', 'info', 'hide');
-            // Add current type
-            notification.classList.add(type, 'show');
+function filterMenu(type,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDishes(type);
+}
 
-            // Auto hide after 3 seconds
-            setTimeout(() => {
-                notification.classList.add('hide');
-                setTimeout(() => {
-                    notification.classList.remove('show', 'hide');
-                }, 400);
-            }, 3000);
-        }
-        // Initialize galaxy background
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = Math.random() * 3 + 'px';
-                star.style.height = star.style.width;
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 4 + 's';
-                starsContainer.appendChild(star);
-            }
+// ===== نافذة الطلب =====
+function openOrder(id){
+  const dishes=getDishes();
+  currentDish=dishes.find(d=>d.id===id);
+  if(!currentDish)return;
+  qty=1;dineType="تناول في المطعم";selectedExtras=[];
+  document.getElementById('orderEmoji').textContent=currentDish.emoji;
+  document.getElementById('orderDishName').textContent=currentDish.name;
+  document.getElementById('orderDishPrice').textContent=currentDish.price.toFixed(2)+' ر.س';
+  document.getElementById('qtyNum').textContent='1';
+  document.getElementById('chefComment').value='';
+  document.querySelectorAll('#dineGroup .radio-opt').forEach(o=>o.classList.remove('selected'));
+  document.querySelector('#dineGroup .radio-opt').classList.add('selected');
+  document.getElementById('extrasGrid').innerHTML=EXTRAS.map((e,i)=>`
+    <div class="extra-item" id="ex_${i}" onclick="toggleExtra(${i})">
+      <div class="extra-left">
+        <div class="extra-check"><span class="extra-check-icon">✓</span></div>
+        <span>${e.emoji} ${e.name}</span>
+      </div>
+      <span class="extra-price">+${e.price.toFixed(2)} ر.س</span>
+    </div>`).join('');
+  updateTotal();
+  document.getElementById('order-panel').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeOrder(){
+  document.getElementById('order-panel').classList.remove('open');
+  document.body.style.overflow='';
+}
+function changeQty(d){qty=Math.max(1,qty+d);document.getElementById('qtyNum').textContent=qty;updateTotal()}
+function selectDine(el,val){
+  document.querySelectorAll('#dineGroup .radio-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');dineType=val;
+}
+function toggleExtra(i){
+  const el=document.getElementById('ex_'+i);
+  const idx=selectedExtras.indexOf(i);
+  if(idx===-1){selectedExtras.push(i);el.classList.add('selected')}
+  else{selectedExtras.splice(idx,1);el.classList.remove('selected')}
+  updateTotal();
+}
+function updateTotal(){
+  if(!currentDish)return;
+  const base=currentDish.price*qty;
+  const ext=selectedExtras.reduce((s,i)=>s+EXTRAS[i].price,0)*qty;
+  document.getElementById('totalBase').textContent=base.toFixed(2)+' ر.س';
+  document.getElementById('totalExtras').textContent=ext.toFixed(2)+' ر.س';
+  document.getElementById('totalFinal').textContent=(base+ext).toFixed(2)+' ر.س';
+}
+function confirmOrder(){
+  if(!currentDish)return;
+  const total=currentDish.price*qty+selectedExtras.reduce((s,i)=>s+EXTRAS[i].price,0)*qty;
+  const orders=getOrders();
+  orders.push({
+    id:'ORD-'+Date.now(),
+    dish:currentDish.name,emoji:currentDish.emoji,
+    price:currentDish.price,qty,dineType,
+    extras:selectedExtras.map(i=>EXTRAS[i].name),
+    comment:document.getElementById('chefComment').value,
+    total,status:'pending',
+    time:new Date().toLocaleString('ar-SA')
+  });
+  setOrders(orders);
+  closeOrder();
+  showToast('🎉 تم استلام طلبك! جاري تحضير '+currentDish.name);
+}
 
-            // Add comets
-            for (let i = 0; i < 5; i++) {
-                const comet = document.createElement('div');
-                comet.className = 'comet';
-                comet.style.left = Math.random() * 100 + '%';
-                comet.style.top = Math.random() * 50 + '%';
-                comet.style.animationDelay = Math.random() * 3 + 's';
-                comet.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                starsContainer.appendChild(comet);
-            }
-        }
-        createStars();
+// ===== التواصل =====
+function sendMessage(){
+  const n=document.getElementById('msg-name').value;
+  const e=document.getElementById('msg-email').value;
+  const b=document.getElementById('msg-body').value;
+  if(!n||!e||!b){showToast('⚠️ يرجى ملء جميع الحقول');return}
+  showToast('✅ تم إرسال رسالتك! سنرد خلال 24 ساعة');
+  ['msg-name','msg-email','msg-subject','msg-body'].forEach(id=>document.getElementById(id).value='');
+}
 
-        // Data storage
-        let students = JSON.parse(localStorage.getItem('students')) || [];
-        let currentEditId = null;
-        let currentDeleteId = null;
-        let studentIdCounter = parseInt(localStorage.getItem('studentIdCounter')) || 1000;
+// ===== إشعار =====
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4500);
+}
 
-        // Generate student ID
-        function generateStudentId() {
-            const id = 'INC' + studentIdCounter;
-            studentIdCounter++;
-            localStorage.setItem('studentIdCounter', studentIdCounter);
-            return id;
-        }
+// ===== نجوم القصيدة =====
+function generateStars(){
+  const c=document.getElementById('poemStars');
+  if(!c)return;c.innerHTML='';
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='poem-star';
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*2}s`;
+    c.appendChild(s);
+  }
+}
 
-        // Set initial student ID
-        document.getElementById('studentId').value = generateStudentId();
+// ===== توهجات القصيدة =====
+function spawnSparkles(el){
+  const emojis=['✨','🌟','⭐','💫','🌸','🌺','💎','🎊','🎉','🌈','🕌','🌙','🌿'];
+  for(let i=0;i<14;i++){
+    setTimeout(()=>{
+      const s=document.createElement('span');
+      s.className='poem-sparkle';
+      s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      s.style.cssText=`left:${15+Math.random()*70}%;top:${10+Math.random()*80}%;--tx:${(Math.random()-.5)*180}px;--ty:${(Math.random()-.5)*180}px;`;
+      const block=document.getElementById('poemBlock');
+      block.style.position='relative';
+      block.appendChild(s);
+      setTimeout(()=>s.remove(),1200);
+    },i*80);
+  }
+}
 
-        // Tab navigation
-        function showTab(tabName) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+// ===== الأدمن =====
+function adminLogin(){
+  const user=document.getElementById('adminUser').value.trim();
+  const pass=document.getElementById('adminPass').value;
+  const err=document.getElementById('adminError');
+  let found=null;
+  for(const k in ADMIN_CREDS){if(ADMIN_CREDS[k].user===user&&ADMIN_CREDS[k].pass===pass)found=ADMIN_CREDS[k]}
+  if(!found){err.textContent='❌ بيانات الدخول غير صحيحة';err.style.display='block';return}
+  err.style.display='none';adminRole=found.role;
+  document.getElementById('adminLogin').style.display='none';
+  document.getElementById('adminDashboard').style.display='block';
+  const badge=document.getElementById('adminRoleBadge');
+  badge.className='admin-role-badge '+(adminRole==='manager'?'role-manager':'role-kitchen');
+  badge.textContent=adminRole==='manager'?'👑 المدير العام':'👨‍🍳 طاقم المطبخ';
+  renderAdminTabs();
+}
+function adminLogout(){
+  adminRole=null;
+  document.getElementById('adminLogin').style.display='flex';
+  document.getElementById('adminDashboard').style.display='none';
+  document.getElementById('adminUser').value='';
+  document.getElementById('adminPass').value='';
+}
+function renderAdminTabs(){
+  const tabs=adminRole==='manager'?['الطلبات','إدارة الأطباق','التقارير']:['الطلبات'];
+  document.getElementById('adminTabs').innerHTML=tabs.map((t,i)=>`<button class="admin-tab ${i===0?'active':''}" onclick="showAdminTab('${t}',this)">${t}</button>`).join('');
+  showAdminTab('الطلبات',document.querySelector('.admin-tab'));
+}
+function showAdminTab(tab,el){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const orders=getOrders();
+  const dishes=getDishes();
+  const c=document.getElementById('adminContent');
+  const statusAr={pending:'انتظار',confirmed:'مؤكد',delivered:'مسلَّم',cancelled:'ملغي'};
 
-            // Refresh tables when switching tabs
-            if (tabName !== 'admission' && tabName !== 'reports') {
-                renderTables();
-            }
-        }
+  if(tab==='الطلبات'){
+    c.innerHTML=`
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">${orders.length}</div><div class="stat-label">إجمالي الطلبات</div></div>
+        <div class="stat-card"><div class="stat-number" style="color:#fbbf24">${orders.filter(o=>o.status==='pending').length}</div><div class="stat-label">قيد الانتظار</div></div>
+        <div class="stat-card"><div class="stat-number" style="color:#22c55e">${orders.filter(o=>o.status==='confirmed').length}</div><div class="stat-label">مؤكدة</div></div>
+        <div class="stat-card"><div class="stat-number" style="color:#3b82f6">${orders.filter(o=>o.status==='delivered').length}</div><div class="stat-label">تم التسليم</div></div>
+      </div>
+      <div style="overflow-x:auto"><table class="orders-table">
+        <thead><tr><th>رقم الطلب</th><th>الطبق</th><th>الكمية</th><th>النوع</th><th>الإضافات</th><th>الإجمالي</th><th>الوقت</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+        <tbody>${orders.length===0?'<tr><td colspan="9" style="text-align:center;padding:2rem;color:rgba(255,255,255,0.4)">لا توجد طلبات بعد</td></tr>':
+          orders.slice().reverse().map(o=>`<tr>
+            <td style="font-size:0.75rem;color:rgba(255,255,255,0.5)">${o.id}</td>
+            <td>${o.emoji} ${o.dish}</td><td>${o.qty}</td>
+            <td style="font-size:0.85rem">${o.dineType==='استلام خارجي'?'🥡':'🍽️'} ${o.dineType}</td>
+            <td style="font-size:0.8rem;max-width:110px">${o.extras.join('، ')||'—'}</td>
+            <td style="color:#a78bfa;font-weight:700">${o.total.toFixed(2)} ر.س</td>
+            <td style="font-size:0.75rem;color:rgba(255,255,255,0.5)">${o.time}</td>
+            <td><span class="status-badge status-${o.status}">${statusAr[o.status]||o.status}</span></td>
+            <td>
+              ${o.status==='pending'?`<button class="action-btn-sm btn-confirm-order" onclick="updateOrder('${o.id}','confirmed')">تأكيد</button>`:''}
+              ${o.status==='confirmed'?`<button class="action-btn-sm btn-deliver" onclick="updateOrder('${o.id}','delivered')">تسليم</button>`:''}
+              ${o.status!=='delivered'&&o.status!=='cancelled'?`<button class="action-btn-sm btn-cancel" onclick="updateOrder('${o.id}','cancelled')">إلغاء</button>`:''}
+              ${o.comment?`<button class="action-btn-sm" style="background:rgba(201,168,76,0.2);color:var(--gold)" onclick="alert('ملاحظة للطاهي:\\n${o.comment.replace(/'/g,'`')}')">ملاحظة</button>`:''}
+            </td></tr>`).join('')}
+        </tbody></table></div>`;
+  }
+  else if(tab==='إدارة الأطباق'){
+    c.innerHTML=`
+      <div class="admin-form"><h3>➕ إضافة طبق جديد</h3>
+        <div class="form-row">
+          <input class="admin-input" id="nd-name" placeholder="اسم الطبق">
+          <input class="admin-input" id="nd-price" placeholder="السعر (ر.س)" type="number" step="0.01">
+        </div>
+        <div class="form-row">
+          <input class="admin-input" id="nd-emoji" placeholder="إيموجي مثل 🍕">
+          <select class="admin-input" id="nd-type" style="direction:rtl">
+            <option value="main">طبق رئيسي</option>
+            <option value="sweet">حلوى</option>
+          </select>
+        </div>
+        <input class="admin-input" id="nd-desc" placeholder="وصف الطبق">
+        <button class="admin-btn" onclick="addDish()" style="margin-top:0.8rem">إضافة الطبق</button>
+      </div>
+      <h3 style="color:#a78bfa;margin-bottom:1rem;font-family:'Amiri',serif">📋 جميع الأطباق (${dishes.length})</h3>
+      ${dishes.map(d=>`
+        <div class="dish-manage-card">
+          <div class="dish-manage-left">
+            <span style="font-size:2rem">${d.emoji}</span>
+            <div><div class="dish-manage-name">${d.name}</div><div class="dish-manage-price">${d.price.toFixed(2)} ر.س · ${d.type==='main'?'رئيسي':'حلوى'}</div></div>
+          </div>
+          <div>
+            <button class="action-btn-sm btn-confirm-order" onclick="editDishPrice(${d.id})">تعديل السعر</button>
+            <button class="action-btn-sm btn-deliver" onclick="editDishName(${d.id})">تعديل الاسم</button>
+            <button class="action-btn-sm btn-cancel" onclick="deleteDish(${d.id})">حذف</button>
+          </div>
+        </div>`).join('')}`;
+  }
+  else if(tab==='التقارير'){
+    const totalRev=orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+o.total,0);
+    const cnt={};orders.forEach(o=>cnt[o.dish]=(cnt[o.dish]||0)+o.qty);
+    const topDish=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]||['لا يوجد',0];
+    c.innerHTML=`
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" style="font-size:1.8rem">${totalRev.toFixed(0)} ر.س</div><div class="stat-label">إجمالي الإيرادات</div></div>
+        <div class="stat-card"><div class="stat-number">${orders.length}</div><div class="stat-label">إجمالي الطلبات</div></div>
+        <div class="stat-card"><div class="stat-number">${orders.filter(o=>o.status==='delivered').length}</div><div class="stat-label">طلبات مكتملة</div></div>
+        <div class="stat-card"><div class="stat-number" style="font-size:1rem;color:#ffd93d">${topDish[0]}</div><div class="stat-label">الأكثر طلباً (${topDish[1]})</div></div>
+      </div>
+      <div style="background:rgba(107,63,160,0.1);border-radius:16px;padding:1.5rem;border:1px solid rgba(107,63,160,0.3)">
+        <h3 style="color:#a78bfa;margin-bottom:1rem;font-family:'Amiri',serif">📊 توزيع الطلبات</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          ${[['pending','انتظار'],['confirmed','مؤكد'],['delivered','مكتمل'],['cancelled','ملغي']].map(([s,ar])=>{
+            const count=orders.filter(o=>o.status===s).length;
+            const pct=orders.length?Math.round(count/orders.length*100):0;
+            return `<div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:1rem">
+              <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-bottom:0.5rem;font-family:'Cairo',sans-serif">${ar}</div>
+              <div style="font-size:1.5rem;font-weight:700;color:#a78bfa;font-family:'Cairo',sans-serif">${count}</div>
+              <div style="background:rgba(255,255,255,0.1);border-radius:4px;height:6px;margin-top:0.5rem">
+                <div style="background:linear-gradient(90deg,#7c3aed,#a78bfa);height:6px;border-radius:4px;width:${pct}%"></div>
+              </div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:0.3rem;font-family:'Cairo',sans-serif">${pct}%</div>
+            </div>`;}).join('')}
+        </div>
+      </div>`;
+  }
+}
+function updateOrder(id,status){
+  const orders=getOrders();
+  const o=orders.find(o=>o.id===id);
+  if(o){o.status=status;setOrders(orders)}
+  showAdminTab(document.querySelector('.admin-tab.active').textContent.trim(),document.querySelector('.admin-tab.active'));
+}
+function addDish(){
+  const name=document.getElementById('nd-name').value.trim();
+  const price=parseFloat(document.getElementById('nd-price').value);
+  const emoji=document.getElementById('nd-emoji').value.trim()||'🍽️';
+  const type=document.getElementById('nd-type').value;
+  const desc=document.getElementById('nd-desc').value.trim();
+  if(!name||!price){alert('يرجى إدخال اسم الطبق والسعر');return}
+  const dishes=getDishes();
+  dishes.push({id:Date.now(),name,price,emoji,type,desc:desc||'طبق مميز من مطعم فارينا',bg:'linear-gradient(135deg,#2a1500,#4a2800)',badge:'new'});
+  setDishes(dishes);
+  showAdminTab('إدارة الأطباق',document.querySelector('.admin-tab.active'));
+  showToast('✅ تمت إضافة: '+name);
+}
+function deleteDish(id){
+  if(!confirm('هل تريد حذف هذا الطبق؟'))return;
+  const dishes=getDishes().filter(d=>d.id!==id);
+  setDishes(dishes);
+  showAdminTab('إدارة الأطباق',document.querySelector('.admin-tab.active'));
+}
+function editDishPrice(id){
+  const dishes=getDishes();const d=dishes.find(d=>d.id===id);if(!d)return;
+  const np=prompt('السعر الجديد لـ '+d.name+' (ر.س):',d.price);
+  if(!np||isNaN(np))return;
+  d.price=parseFloat(parseFloat(np).toFixed(2));setDishes(dishes);
+  showAdminTab('إدارة الأطباق',document.querySelector('.admin-tab.active'));
+  showToast('✅ تم تحديث سعر: '+d.name);
+}
+function editDishName(id){
+  const dishes=getDishes();const d=dishes.find(d=>d.id===id);if(!d)return;
+  const nn=prompt('الاسم الجديد للطبق:',d.name);
+  if(!nn||!nn.trim())return;
+  d.name=nn.trim();setDishes(dishes);
+  showAdminTab('إدارة الأطباق',document.querySelector('.admin-tab.active'));
+  showToast('✅ تم تحديث اسم الطبق');
+}
 
-        // Form submission
-        document.getElementById('admissionForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const student = {
-                id: document.getElementById('studentId').value,
-                name: document.getElementById('studentName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                course: document.getElementById('course').value,
-                admissionDate: document.getElementById('admissionDate').value,
-                feeAmount: parseFloat(document.getElementById('feeAmount').value),
-                courseDuration: parseInt(document.getElementById('courseDuration').value),
-                address: document.getElementById('address').value,
-                presentDays: 0,
-                absentDays: 0,
-                feePaid: 0,
-                performanceRating: 0,
-                attendanceRating: 0,
-                progress: 0,
-                courseStatus: 'incomplete',
-                createdAt: new Date().toISOString()
-            };
+// ===== التوجيه =====
+function handleRoute(){
+  if(window.location.hash==='#admin'){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('admin').style.display='block';
+    document.getElementById('admin').classList.add('active');
+    document.getElementById('mainNav').style.display='none';
+  }
+}
+window.addEventListener('hashchange',handleRoute);
+handleRoute();
 
-            students.push(student);
-            localStorage.setItem('students', JSON.stringify(students));
-            
-            showNotification('Student Added', `${student.name} has been successfully admitted with ID ${student.id}`, 'success');
-            this.reset();
-            document.getElementById('studentId').value = generateStudentId();
-            renderTables();
-        });
-
-        // Render all tables
-        function renderTables() {
-            renderAttendanceTable();
-            renderFeesTable();
-            renderRatesTable();
-            renderStatusTable();
-        }
-
-        // Render Attendance Table
-        function renderAttendanceTable() {
-            const tbody = document.getElementById('attendanceBody');
-            tbody.innerHTML = '';
-
-            if (students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-state-icon">📊</div><div>No students found</div></td></tr>';
-                return;
-            }
-
-            students.forEach(student => {
-                const totalDays = student.presentDays + student.absentDays;
-                const attendancePercent = totalDays > 0 ? ((student.presentDays / totalDays) * 100).toFixed(1) : 0;
-                
-                const row = `
-                    <tr>
-                        <td>${student.id}</td>
-                        <td>${student.name}</td>
-                        <td>${student.course}</td>
-                        <td>${student.presentDays}</td>
-                        <td>${student.absentDays}</td>
-                        <td>${attendancePercent}%</td>
-                        <td class="actions">
-                            <button class="btn btn-warning btn-small" onclick="editAttendance('${student.id}')">Edit</button>
-                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        // Render Fees Table
-        function renderFeesTable() {
-            const tbody = document.getElementById('feesBody');
-            tbody.innerHTML = '';
-
-            if (students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><div class="empty-state-icon">💰</div><div>No students found</div></td></tr>';
-                return;
-            }
-
-            students.forEach(student => {
-                const balance = student.feeAmount - student.feePaid;
-                const status = balance === 0 ? 'Paid' : balance < student.feeAmount ? 'Partial' : 'Unpaid';
-                
-                const row = `
-                    <tr>
-                        <td>${student.id}</td>
-                        <td>${student.name}</td>
-                        <td>${student.course}</td>
-                        <td>$${student.feeAmount.toFixed(2)}</td>
-                        <td>$${student.feePaid.toFixed(2)}</td>
-                        <td>$${balance.toFixed(2)}</td>
-                        <td><span class="status-badge ${status === 'Paid' ? 'status-completed' : 'status-incomplete'}">${status}</span></td>
-                        <td class="actions">
-                            <button class="btn btn-warning btn-small" onclick="editFees('${student.id}')">Edit</button>
-                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        // Render Rates Table
-        function renderRatesTable() {
-            const tbody = document.getElementById('ratesBody');
-            tbody.innerHTML = '';
-
-            if (students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-state-icon">⭐</div><div>No students found</div></td></tr>';
-                return;
-            }
-
-            students.forEach(student => {
-                const overallRating = ((student.performanceRating + student.attendanceRating) / 2).toFixed(1);
-                
-                const row = `
-                    <tr>
-                        <td>${student.id}</td>
-                        <td>${student.name}</td>
-                        <td>${student.course}</td>
-                        <td>${student.performanceRating}/10</td>
-                        <td>${student.attendanceRating}/10</td>
-                        <td>${overallRating}/10</td>
-                        <td class="actions">
-                            <button class="btn btn-warning btn-small" onclick="editRates('${student.id}')">Edit</button>
-                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        // Render Status Table
-        function renderStatusTable() {
-            const tbody = document.getElementById('statusBody');
-            tbody.innerHTML = '';
-
-            if (students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-state-icon">📈</div><div>No students found</div></td></tr>';
-                return;
-            }
-
-            students.forEach(student => {
-                const row = `
-                    <tr>
-                        <td>${student.id}</td>
-                        <td>${student.name}</td>
-                        <td>${student.course}</td>
-                        <td>${new Date(student.admissionDate).toLocaleDateString()}</td>
-                        <td>${student.progress}%</td>
-                        <td><span class="status-badge ${student.courseStatus === 'completed' ? 'status-completed' : 'status-incomplete'}">${student.courseStatus}</span></td>
-                        <td class="actions">
-                            <button class="btn btn-warning btn-small" onclick="editStatus('${student.id}')">Edit</button>
-                            <button class="btn btn-danger btn-small" onclick="deleteStudent('${student.id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        // Edit functions
-        function editAttendance(id) {
-            const student = students.find(s => s.id === id);
-            currentEditId = id;
-            
-            const formHtml = `
-                <div class="form-group">
-                    <label>Present Days</label>
-                    <input type="number" id="editPresentDays" value="${student.presentDays}" min="0">
-                </div>
-                <div class="form-group">
-                    <label>Absent Days</label>
-                    <input type="number" id="editAbsentDays" value="${student.absentDays}" min="0">
-                </div>
-            `;
-            
-            document.getElementById('editFormContainer').innerHTML = formHtml;
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function editFees(id) {
-            const student = students.find(s => s.id === id);
-            currentEditId = id;
-            
-            const formHtml = `
-                <div class="form-group">
-                    <label>Total Fee Amount ($)</label>
-                    <input type="number" id="editFeeAmount" value="${student.feeAmount}" min="0" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label>Amount Paid ($)</label>
-                    <input type="number" id="editFeePaid" value="${student.feePaid}" min="0" step="0.01">
-                </div>
-            `;
-            
-            document.getElementById('editFormContainer').innerHTML = formHtml;
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function editRates(id) {
-            const student = students.find(s => s.id === id);
-            currentEditId = id;
-            
-            const formHtml = `
-                <div class="form-group">
-                    <label>Performance Rating (0-10)</label>
-                    <input type="number" id="editPerformanceRating" value="${student.performanceRating}" min="0" max="10" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label>Attendance Rating (0-10)</label>
-                    <input type="number" id="editAttendanceRating" value="${student.attendanceRating}" min="0" max="10" step="0.1">
-                </div>
-            `;
-            
-            document.getElementById('editFormContainer').innerHTML = formHtml;
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function editStatus(id) {
-            const student = students.find(s => s.id === id);
-            currentEditId = id;
-            
-            const formHtml = `
-                <div class="form-group">
-                    <label>Progress (%)</label>
-                    <input type="number" id="editProgress" value="${student.progress}" min="0" max="100">
-                </div>
-                <div class="form-group">
-                    <label>Course Status</label>
-                    <select id="editCourseStatus">
-                        <option value="incomplete" ${student.courseStatus === 'incomplete' ? 'selected' : ''}>Incomplete</option>
-                        <option value="completed" ${student.courseStatus === 'completed' ? 'selected' : ''}>Completed</option>
-                    </select>
-                </div>
-            `;
-            
-            document.getElementById('editFormContainer').innerHTML = formHtml;
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function saveEdit() {
-            const student = students.find(s => s.id === currentEditId);
-            const studentName = student.name;
-            
-            // Update based on which fields exist
-            if (document.getElementById('editPresentDays')) {
-                student.presentDays = parseInt(document.getElementById('editPresentDays').value);
-                student.absentDays = parseInt(document.getElementById('editAbsentDays').value);
-                showNotification('Attendance Updated', `Attendance record for ${studentName} has been updated successfully`, 'success');
-            }
-            if (document.getElementById('editFeeAmount')) {
-                student.feeAmount = parseFloat(document.getElementById('editFeeAmount').value);
-                student.feePaid = parseFloat(document.getElementById('editFeePaid').value);
-                showNotification('Fees Updated', `Fee information for ${studentName} has been updated successfully`, 'success');
-            }
-            if (document.getElementById('editPerformanceRating')) {
-                student.performanceRating = parseFloat(document.getElementById('editPerformanceRating').value);
-                student.attendanceRating = parseFloat(document.getElementById('editAttendanceRating').value);
-                showNotification('Ratings Updated', `Ratings for ${studentName} have been updated successfully`, 'success');
-            }
-            if (document.getElementById('editProgress')) {
-                student.progress = parseInt(document.getElementById('editProgress').value);
-                student.courseStatus = document.getElementById('editCourseStatus').value;
-                showNotification('Status Updated', `Course status for ${studentName} has been updated successfully`, 'success');
-            }
-            
-            localStorage.setItem('students', JSON.stringify(students));
-            closeModal();
-            renderTables();
-        }
-
-        function deleteStudent(id) {
-            currentDeleteId = id;
-            document.getElementById('deleteModal').classList.add('active');
-        }
-
-        function confirmDelete() {
-            const student = students.find(s => s.id === currentDeleteId);
-            const studentName = student.name;
-            const studentId = student.id;
-            
-            students = students.filter(s => s.id !== currentDeleteId);
-            localStorage.setItem('students', JSON.stringify(students));
-            closeModal();
-            renderTables();
-            showNotification('Student Deleted', `${studentName} (ID: ${studentId}) has been permanently deleted from the system`, 'warning');
-        }
-
-        function closeModal() {
-            document.getElementById('editModal').classList.remove('active');
-            document.getElementById('deleteModal').classList.remove('active');
-        }
-
-        // Search functionality
-        function filterTable(tableId, searchValue) {
-            const table = document.getElementById(tableId);
-            const rows = table.getElementsByTagName('tr');
-            
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchValue.toLowerCase()) ? '' : 'none';
-            }
-        }
-
-        // Report functions
-        function initializeReportDates() {
-            const monthSelect = document.getElementById('reportMonth');
-            const yearSelect = document.getElementById('reportYear');
-            
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                          'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            months.forEach((month, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = month;
-                monthSelect.appendChild(option);
-            });
-            
-            const currentYear = new Date().getFullYear();
-            for (let i = currentYear - 5; i <= currentYear + 1; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                if (i === currentYear) option.selected = true;
-                yearSelect.appendChild(option);
-            }
-        }
-
-        function generateReport() {
-            const month = document.getElementById('reportMonth').value;
-            const year = document.getElementById('reportYear').value;
-            
-            let filteredStudents = students;
-            
-            if (month !== '' && year) {
-                filteredStudents = students.filter(s => {
-                    const admissionDate = new Date(s.admissionDate);
-                    return admissionDate.getMonth() == month && admissionDate.getFullYear() == year;
-                });
-            }
-            
-            // Calculate statistics
-            const totalStudents = filteredStudents.length;
-            const totalRevenue = filteredStudents.reduce((sum, s) => sum + s.feePaid, 0);
-            const completed = filteredStudents.filter(s => s.courseStatus === 'completed').length;
-            const active = filteredStudents.filter(s => s.courseStatus === 'incomplete').length;
-            
-            document.getElementById('totalStudents').textContent = totalStudents;
-            document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toFixed(2);
-            document.getElementById('completedCourses').textContent = completed;
-            document.getElementById('activeCourses').textContent = active;
-            
-            // Generate detailed report table
-            if (filteredStudents.length > 0) {
-                let reportHtml = '<table><thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Fee Paid</th><th>Status</th></tr></thead><tbody>';
-                
-                filteredStudents.forEach(student => {
-                    reportHtml += `
-                        <tr>
-                            <td>${student.id}</td>
-                            <td>${student.name}</td>
-                            <td>${student.course}</td>
-                            <td>$${student.feePaid.toFixed(2)}</td>
-                            <td><span class="status-badge ${student.courseStatus === 'completed' ? 'status-completed' : 'status-incomplete'}">${student.courseStatus}</span></td>
-                        </tr>
-                    `;
-                });
-                
-                reportHtml += '</tbody></table>';
-                document.getElementById('reportContent').innerHTML = reportHtml;
-                document.getElementById('reportData').style.display = 'block';
-                
-                const monthName = month !== '' ? document.getElementById('reportMonth').options[parseInt(month) + 1].text : 'All Months';
-                showNotification('Report Generated', `Report for ${monthName} ${year} has been generated with ${totalStudents} students`, 'success');
-            } else {
-                document.getElementById('reportData').style.display = 'none';
-                showNotification('No Data', 'No students found for the selected period', 'info');
-            }
-        }
-
-        function downloadReport() {
-            const month = document.getElementById('reportMonth').value;
-            const year = document.getElementById('reportYear').value;
-            const monthName = month !== '' ? document.getElementById('reportMonth').options[parseInt(month) + 1].text : 'All';
-            
-            let csvContent = "Student ID,Name,Course,Admission Date,Fee Amount,Fee Paid,Balance,Progress,Status,Performance Rating,Attendance Rating\n";
-            
-            students.forEach(student => {
-                const balance = student.feeAmount - student.feePaid;
-                csvContent += `${student.id},${student.name},${student.course},${student.admissionDate},${student.feeAmount},${student.feePaid},${balance},${student.progress}%,${student.courseStatus},${student.performanceRating},${student.attendanceRating}\n`;
-            });
-            
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            const filename = `Inchon_Institute_Report_${monthName}_${year}.csv`;
-            a.download = filename;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            showNotification('Report Downloaded', `${filename} has been downloaded successfully`, 'success');
-        }
-
-        function deleteMonthData() {
-            const month = document.getElementById('reportMonth').value;
-            const year = document.getElementById('reportYear').value;
-            
-            if (month === '' || !year) {
-                showNotification('Selection Required', 'Please select a month and year first', 'warning');
-                return;
-            }
-            
-            const monthName = document.getElementById('reportMonth').options[parseInt(month) + 1].text;
-            
-            if (!confirm(`Are you sure you want to delete all data for ${monthName} ${year}? This action cannot be undone!`)) {
-                return;
-            }
-            
-            const beforeCount = students.length;
-            students = students.filter(s => {
-                const admissionDate = new Date(s.admissionDate);
-                return !(admissionDate.getMonth() == month && admissionDate.getFullYear() == year);
-            });
-            const deletedCount = beforeCount - students.length;
-            
-            localStorage.setItem('students', JSON.stringify(students));
-            showNotification('Data Deleted', `${deletedCount} student record(s) from ${monthName} ${year} have been permanently deleted`, 'warning');
-            generateReport();
-            renderTables();
-        }
-
-        // Initialize
-        initializeReportDates();
-        renderTables();
-        
-        // Set default admission date to today
-        document.getElementById('admissionDate').valueAsDate = new Date();
-        
-        // Check authentication on page load
-        checkAuth();
-    </script>
+// تهيئة
+if(!localStorage.getItem('farina_dishes'))setDishes(DISHES_DEFAULT);
+renderHomePreview();
+</script>
 </body>
 </html>
